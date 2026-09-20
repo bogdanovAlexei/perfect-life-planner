@@ -16,6 +16,7 @@
       .nav-group { display:grid; gap:7px; } .nav-label { font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:#8792ad; padding:0 11px 5px; font-weight:700; }
       .nav-item { background:transparent; border:0; color:#bfc8da; border-radius:12px; text-align:left; padding:11px; display:flex; align-items:center; gap:11px; font-size:.94rem; } .nav-item:hover,.nav-item.active { background:#25324f; color:#fff; } .dot { width:8px;height:8px;border-radius:50%;background:#c8f4d7; } .nav-icon{width:19px;text-align:center;color:inherit;}
       .sidebar-footer { margin-top:auto; border-top:1px solid #2a3856; padding:19px 10px 0; display:flex;gap:10px;align-items:center;font-size:.84rem;color:#d9e1f1; } .avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(140deg,#ffd5ca,#ded3ff);display:grid;place-items:center;color:#101a31;font-weight:800;}
+      .account-button{width:auto;white-space:nowrap;}.auth-dialog{border:0;border-radius:20px;padding:0;background:transparent;box-shadow:0 25px 80px #101a3150;max-width:min(430px,calc(100vw - 30px));width:100%;}.auth-dialog::backdrop{background:#101a3180;backdrop-filter:blur(4px);}.auth-card{padding:24px;background:#fff;border:1px solid var(--line);border-radius:20px;display:grid;gap:13px;}.auth-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;}.auth-head h2{margin:0;font-size:1.35rem;letter-spacing:-.04em;}.auth-card label{display:grid;gap:6px;color:#58657f;font-size:.75rem;font-weight:750;}.auth-card input{width:100%;border:1px solid #d6deec;border-radius:10px;padding:11px 12px;color:var(--ink);}.auth-card .primary{width:100%;}.auth-toggle{border:0;background:transparent;color:#34538e;font-size:.75rem;font-weight:750;padding:2px;}.auth-state{color:#697895;font-size:.71rem;line-height:1.4;min-height:1em;}
       .content { padding:31px 38px 48px; overflow:hidden; } .topbar { display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:30px; } .eyebrow { margin:0 0 6px;color:#75809a;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;} h1{margin:0;font-size:clamp(1.65rem,3vw,2.25rem);letter-spacing:-.055em;line-height:1.05;} .week-nav {display:flex;align-items:center;gap:9px;} .icon-button {width:37px;height:37px;border:1px solid var(--line);border-radius:11px;background:white;color:#26314a;font-size:1.15rem;} .date-range{font-weight:700;font-size:.93rem;margin:0 6px;white-space:nowrap;}.primary {border:0;border-radius:12px;background:#101a31;color:#fff;padding:12px 16px;font-weight:750;box-shadow:0 7px 20px #101a3121;} .primary:hover{background:#21345c;}
       .insights { display:grid; grid-template-columns:1.35fr 1fr 1fr; gap:14px; margin-bottom:25px; }.card {border:1px solid var(--line);border-radius:var(--radius);background:#fff;}.focus-card{padding:20px;display:flex;align-items:center;gap:17px;}.ring {width:60px;height:60px;border-radius:50%;background:conic-gradient(#80dca3 0 79%,#ecf0f4 79%);display:grid;place-items:center;flex:none;}.ring::after{content:"";width:46px;height:46px;background:#fff;border-radius:50%;position:absolute;}.ring span{position:relative;z-index:1;font-weight:850;font-size:.9rem;}.metric-title{font-size:.78rem;color:var(--muted);margin:0 0 3px;font-weight:650;}.metric-value{font-size:1.15rem;margin:0;font-weight:800;letter-spacing:-.035em;}.metric-note{font-size:.77rem;color:#4f9e6c;margin:4px 0 0;}.mini-card{padding:17px 19px;position:relative;overflow:hidden;}.mini-card::after{content:"";position:absolute;width:82px;height:82px;border-radius:50%;right:-20px;bottom:-38px;background:var(--violet);}.mini-card:nth-child(3)::after{background:var(--sun);}.mini-card strong{font-size:1.46rem;letter-spacing:-.05em;display:block;margin-top:8px;}.mini-card small{color:var(--muted);font-weight:650;}
       .workspace { display:grid;grid-template-columns:minmax(620px,1fr) 285px;gap:20px;align-items:start; }.calendar-card{padding:18px 18px 21px;min-width:0;}.calendar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}.calendar-head h2,.right-card h2 {font-size:1rem;margin:0;letter-spacing:-.025em;}.legend{display:flex;gap:9px;font-size:.7rem;color:var(--muted);}.legend i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;}.grid{display:grid;grid-template-columns:54px repeat(5,minmax(104px,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line);}.grid > *{border-right:1px solid var(--line);border-bottom:1px solid var(--line);}.day{height:42px;padding:10px 8px;font-size:.77rem;text-align:center;color:var(--muted);font-weight:700;}.day.today{color:#101a31;background:#f1f9f3;}.time{height:68px;padding:7px 9px;font-size:.7rem;color:#9aa3b4;text-align:right;font-variant-numeric:tabular-nums;}.slot{height:68px;position:relative;background:linear-gradient(90deg,#fff,#fffdfd);}.event{position:absolute;z-index:2;left:5px;right:5px;top:5px;border-radius:9px;padding:7px 8px;font-size:.7rem;line-height:1.25;font-weight:760;overflow:hidden;}.event span{display:block;font-size:.62rem;font-weight:570;opacity:.7;margin-top:2px;}.mint{background:var(--mint);}.violet{background:var(--violet);}.coral{background:var(--coral);}.sun{background:var(--sun);}.blue{background:var(--blue);}.event.tall{height:126px;}.event.mid{height:84px;}.event.short{height:57px;}.calendar-footer{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:.76rem;padding-top:15px;}.view-all{color:#334d85;border:0;background:transparent;font-weight:750;}
@@ -47,17 +48,17 @@
           <button class="nav-item"><span class="nav-icon">◔</span> Mon équilibre</button>
           <button class="nav-item"><span class="nav-icon">☼</span> Mon énergie</button>
         </nav>
-        <div class="sidebar-footer"><span class="avatar">L</span><span>Léa Martin<br><small style="color:#8792ad">Ma semaine idéale</small></span></div>
+        <div class="sidebar-footer"><span class="avatar">P</span><span>Votre espace PLP<br><small style="color:#8792ad">Planning personnel</small></span></div>
       </aside>
       <main class="content">
         <header class="topbar">
-          <div><p class="eyebrow">Semaine en cours</p><h1>Bonjour Léa, on avance ?</h1></div>
-          <div class="week-nav"><button class="icon-button" aria-label="Semaine précédente">‹</button><span class="date-range">14 — 18 septembre</span><button class="icon-button" aria-label="Semaine suivante">›</button><button class="primary" id="optimize">Optimiser ma semaine</button></div>
+          <div><p class="eyebrow">Semaine en cours</p><h1>Construisons votre semaine</h1></div>
+          <div class="week-nav"><button class="icon-button" aria-label="Semaine précédente">‹</button><span class="date-range">14 — 18 septembre</span><button class="icon-button" aria-label="Semaine suivante">›</button><button class="secondary account-button" id="accountButton">Se connecter</button><button class="primary" id="optimize">Optimiser ma semaine</button></div>
         </header>
         <section class="insights" aria-label="Bilan de la semaine">
-          <article class="card focus-card"><div class="ring"><span>79%</span></div><div><p class="metric-title">Équilibre de la semaine</p><p class="metric-value">Très bon rythme</p><p class="metric-note">+ 12% par rapport à la semaine dernière</p></div></article>
-          <article class="card mini-card"><small>Temps pour toi</small><strong>6 h 30</strong><small>objectif : 7 h</small></article>
-          <article class="card mini-card"><small>Priorités prévues</small><strong>8 / 10</strong><small>2 créneaux à placer</small></article>
+          <article class="card focus-card"><div class="ring"><span>0%</span></div><div><p class="metric-title">Équilibre de la semaine</p><p class="metric-value">À construire</p><p class="metric-note">Ajoutez vos premières plages</p></div></article>
+          <article class="card mini-card"><small>Temps pour toi</small><strong>0 h 00</strong><small>objectif : 7 h</small></article>
+          <article class="card mini-card"><small>Priorités prévues</small><strong>0 / 0</strong><small>Votre planning est vierge</small></article>
         </section>
         <section class="workspace">
           <article class="card calendar-card"><div class="calendar-head"><h2>Mon planning</h2><div class="legend"><span><i style="background:#8bdbaa"></i>Personnel</span><span><i style="background:#b9a6ff"></i>Travail</span><span><i style="background:#f2b29d"></i>Énergie</span></div></div>
@@ -74,17 +75,17 @@
             </div><div class="calendar-footer"><span>Créneaux protégés : 4 h 30 de concentration</span><button class="view-all" id="viewAll">Voir la journée ›</button></div><div class="builder-bar"><div><strong>Construire depuis zéro</strong><small>Masquez l’exemple et composez votre semaine.</small></div><button class="secondary" id="startFresh">Partir de zéro</button></div><div id="customTimeline" class="custom-timeline" aria-live="polite"></div>
           </article>
           <aside class="side-panel">
-            <article class="card right-card"><h2>Aujourd’hui, mardi 15</h2><div class="agenda"><div class="agenda-row"><time>09:00</time><span class="agenda-dot"></span><div class="agenda-name">Projet Atlas<small>Concentration · 1 h 30</small></div></div><div class="agenda-row"><time>12:30</time><span class="agenda-dot"></span><div class="agenda-name">Déjeuner avec Victor<small>Centre-ville · 1 h</small></div></div><div class="agenda-row"><time>17:30</time><span class="agenda-dot"></span><div class="agenda-name">Déconnexion<small>Une heure pour toi</small></div></div></div></article>
+            <article class="card right-card"><h2>Aujourd’hui, mardi 15</h2><div class="agenda" id="agendaList"><p class="empty-custom">Aucune plage pour aujourd’hui.</p></div></article>
             <article class="card right-card add-card" id="plannerForm"><h2>Créer mon planning</h2><p>Ajoutez une plage et décidez si elle peut bouger lors de l’optimisation.</p><div class="add-row"><input id="eventName" aria-label="Nom de la plage" placeholder="Ex. Réviser les maths" /><select id="eventType" aria-label="Type de plage"><option>Personnel</option><option>Travail</option><option>Énergie</option></select></div><div class="add-row"><select id="eventDay" aria-label="Jour"><option>Lundi</option><option selected>Mardi</option><option>Mercredi</option><option>Jeudi</option><option>Vendredi</option><option>Samedi</option><option>Dimanche</option></select><select id="eventFlex" aria-label="Souplesse de la plage"><option value="flexible">Plage flexible</option><option value="fixed">Plage fixe</option></select></div><div class="range-grid"><label>De<input id="eventStart" type="time" value="16:00" aria-label="Heure de début" /></label><label>À<input id="eventEnd" type="time" value="17:00" aria-label="Heure de fin" /></label></div><button class="primary" id="addEvent">Ajouter la plage</button><div id="customList" class="custom-list" aria-live="polite"></div></article>
-            <article class="card right-card import-card"><div class="import-title"><span class="import-badge">▧</span><h2>Remplir avec une photo</h2></div><p>PLP lit les jours et horaires visibles sur une photo de planning. Vérifiez toujours le brouillon avant de l’utiliser.</p><label class="upload-drop" for="scheduleImage">Choisir une photo du planning</label><input id="scheduleImage" type="file" accept="image/*" hidden /><img id="photoPreview" class="photo-preview" alt="Aperçu du planning importé" /><div class="ocr-progress" id="ocrProgress"><div class="ocr-progress-bar" id="ocrProgressBar"></div></div><small id="photoState" class="photo-state">Traitement local dans le navigateur.</small></article>
+            <article class="card right-card import-card"><div class="import-title"><span class="import-badge">▧</span><h2>Remplir avec une photo</h2></div><p>Choisissez une photo ou collez une capture avec Ctrl/Cmd + V. Vérifiez toujours le brouillon avant de l’utiliser.</p><label class="upload-drop" for="scheduleImage">Choisir une photo du planning</label><input id="scheduleImage" type="file" accept="image/*" hidden /><img id="photoPreview" class="photo-preview" alt="Aperçu du planning importé" /><div class="ocr-progress" id="ocrProgress"><div class="ocr-progress-bar" id="ocrProgressBar"></div></div><small id="photoState" class="photo-state">Traitement local dans le navigateur.</small></article>
             <article class="card right-card zimbra-card"><div class="zimbra-title"><span class="zimbra-badge">U</span><h2>Emploi du temps étudiant</h2></div><p>Consultez vos cours dans Zimbra Unicaen, puis préparez leur import sécurisé dans PLP.</p><button class="secondary" id="connectZimbra">Ouvrir Zimbra Unicaen</button><small class="integration-note">Prochaine étape : import du calendrier par flux ICS / CalDAV</small></article>
           </aside>
         </section>
       </main>
-    </div><div class="toast" role="status" id="toast">Votre planning a été mis à jour.</div>
+    </div><dialog id="authDialog" class="auth-dialog"><form class="auth-card" method="dialog" onsubmit="return false"><div class="auth-head"><div><p class="eyebrow">Votre espace PLP</p><h2 id="authTitle">Se connecter</h2></div><button class="icon-button" id="closeAuth" type="button" aria-label="Fermer">×</button></div><p id="authCopy" class="metric-note">Retrouvez votre planning sur tous vos appareils.</p><label>Email<input id="authEmail" type="email" autocomplete="email" placeholder="vous@exemple.fr" /></label><label>Mot de passe<input id="authPassword" type="password" autocomplete="current-password" placeholder="8 caractères minimum" /></label><button class="primary" id="authSubmit" type="button">Se connecter</button><button class="auth-toggle" id="authToggle" type="button">Créer un compte</button><small id="authState" class="auth-state">Connexion sécurisée via Supabase.</small></form></dialog><div class="toast" role="status" id="toast">Votre planning a été mis à jour.</div>
     <script>
       const toast=document.getElementById('toast'); let timeout; function notice(message){toast.textContent=message;toast.classList.add('show');clearTimeout(timeout);timeout=setTimeout(()=>toast.classList.remove('show'),2800)}
-      const plannerKey='plp-custom-plages'; const freshKey='plp-fresh-mode'; let customEvents=[]; let freshMode=false; try{customEvents=JSON.parse(localStorage.getItem(plannerKey)||'[]');freshMode=localStorage.getItem(freshKey)==='true'}catch(error){customEvents=[]}
+      const plannerKey='plp-custom-plages'; const freshKey='plp-fresh-mode'; let customEvents=[]; let freshMode=true; try{customEvents=JSON.parse(localStorage.getItem(plannerKey)||'[]');const savedFresh=localStorage.getItem(freshKey);freshMode=savedFresh===null?true:savedFresh==='true'}catch(error){customEvents=[];freshMode=true}
       const escapeHtml=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
       function saveEvents(){try{localStorage.setItem(plannerKey,JSON.stringify(customEvents))}catch(error){}}
       function paintFreshMode(){document.querySelectorAll('.grid .event').forEach(event=>event.style.display=freshMode?'none':'');const button=document.getElementById('startFresh');button.textContent=freshMode?'Afficher l’exemple':'Partir de zéro';}
@@ -100,6 +101,81 @@
       function parseSchedule(text){const days=[['Lundi','lundi','lun'],['Mardi','mardi','mar'],['Mercredi','mercredi','mer'],['Jeudi','jeudi','jeu'],['Vendredi','vendredi','ven'],['Samedi','samedi','sam'],['Dimanche','dimanche','dim']];let currentDay='Mardi';const imported=[];const lines=text.split(/\r?\n/).map(line=>line.trim()).filter(Boolean);lines.forEach(line=>{const lower=line.toLowerCase();const day=days.find(entry=>lower.includes(entry[1])||lower.includes(entry[2]));if(day)currentDay=day[0];const range=line.match(/(\d{1,2})\s*[:hH.]\s*(\d{2})\s*(?:-|–|—|à|a)\s*(\d{1,2})\s*[:hH.]\s*(\d{2})/);if(range){const start=Number(range[1])*60+Number(range[2]);const end=Number(range[3])*60+Number(range[4]);const name=line.replace(range[0],'').replace(/\b(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche|lun|mar|mer|jeu|ven|sam|dim)\.?\b/ig,'').replace(/^[-–—:|\s]+|[-–—:|\s]+$/g,'').trim()||'Cours importé';imported.push({name:name.slice(0,70),day:currentDay,start:toTime(start),end:toTime(end),flex:'fixed',type:'Travail'});return;}const matches=[...line.matchAll(/\b([01]?\d|2[0-3])\s*[:hH.]\s*([0-5]\d)\b/g)];if(matches.length){const start=Number(matches[0][1])*60+Number(matches[0][2]);const name=line.replace(/\b([01]?\d|2[0-3])\s*[:hH.]\s*([0-5]\d)\b/g,'').replace(/^[-–—:|\s]+|[-–—:|\s]+$/g,'').trim()||'Cours importé';imported.push({name:name.slice(0,70),day:currentDay,start:toTime(start),end:toTime(start+60),flex:'fixed',type:'Travail'});}});return imported;}
       imageInput.addEventListener('change',async()=>{const file=imageInput.files?.[0];if(!file)return;preview.src=URL.createObjectURL(file);preview.style.display='block';progress.style.display='block';progressBar.style.width='4%';photoState.textContent='Lecture de la photo en cours…';try{const Tesseract=await loadOcr();const result=await Tesseract.recognize(file,'fra',{logger:message=>{if(message.status==='recognizing text'&&message.progress)progressBar.style.width=`${Math.max(4,Math.round(message.progress*100))}%`}});const imported=parseSchedule(result.data.text);if(!imported.length){photoState.textContent='Aucun horaire clair détecté. Ajoutez les plages manuellement ou essayez une photo plus nette.';notice('Photo lue, mais aucun horaire identifiable.');}else{customEvents.push(...imported);freshMode=true;try{localStorage.setItem(freshKey,'true')}catch(error){}saveEvents();renderCustomEvents();paintFreshMode();progressBar.style.width='100%';photoState.textContent=`${imported.length} plage${imported.length>1?'s':''} détectée${imported.length>1?'s':''}. Vérifiez le brouillon ci-dessous.`;notice('Le brouillon issu de la photo est prêt à vérifier.');}}catch(error){progress.style.display='none';photoState.textContent='La lecture automatique n’a pas pu démarrer. Vos plages restent disponibles en saisie manuelle.';notice('Import photo indisponible pour le moment.');}});
       paintFreshMode();renderCustomEvents();
+    </script>
+    <script>
+      const grid24=document.querySelector('.grid');
+      const gridDays=['Lundi','Mardi','Mercredi','Jeudi','Vendredi'];
+      const gridLabels=['Lun. 14','Mar. 15','Mer. 16','Jeu. 17','Ven. 18'];
+      const demoEvents=[
+        {name:'Marche matinale',day:'Lundi',start:'08:00',end:'08:30',type:'Personnel'},
+        {name:'Projet Atlas',day:'Lundi',start:'09:00',end:'10:30',type:'Travail'},
+        {name:'Projet Atlas',day:'Mardi',start:'09:00',end:'10:30',type:'Travail'},
+        {name:'Réunion équipe',day:'Mercredi',start:'09:30',end:'10:15',type:'Travail'},
+        {name:'Café avec Ana',day:'Lundi',start:'11:15',end:'11:45',type:'Énergie'},
+        {name:'Répondre aux emails',day:'Mardi',start:'11:15',end:'11:45',type:'Travail'},
+        {name:'Déjeuner',day:'Mardi',start:'12:30',end:'13:15',type:'Énergie'},
+        {name:'Session création',day:'Mardi',start:'14:00',end:'15:00',type:'Travail'}
+      ];
+      const minuteValue=time=>{const [hour,minute]=String(time).split(':').map(Number);return hour*60+minute;};
+      const eventColor=type=>type==='Travail'?'violet':type==='Énergie'?'coral':'mint';
+      function renderAgenda(){
+        const agenda=document.getElementById('agendaList');
+        const today=customEvents.filter(event=>event.day==='Mardi').sort((a,b)=>minuteValue(a.start)-minuteValue(b.start));
+        if(!today.length){agenda.innerHTML='<p class="empty-custom">Aucune plage pour aujourd’hui.</p>';return;}
+        agenda.innerHTML=today.map((event,index)=>`<div class="agenda-row"><time>${escapeHtml(event.start)}</time><span class="agenda-dot"></span><div class="agenda-name">${escapeHtml(event.name)}<small>${escapeHtml(event.type||'Personnel')} · ${escapeHtml(event.start)}–${escapeHtml(event.end)}</small></div></div>`).join('');
+      }
+      function renderGridEvents(){
+        if(!grid24)return;
+        grid24.querySelectorAll('.event').forEach(event=>event.remove());
+        const events=(freshMode?[]:demoEvents).concat(customEvents);
+        events.forEach(event=>{
+          const dayIndex=gridDays.indexOf(event.day); if(dayIndex<0)return;
+          const start=minuteValue(event.start); const end=Math.max(start+15,minuteValue(event.end));
+          const slot=grid24.querySelector(`[data-day-index="${dayIndex}"][data-hour="${Math.floor(start/60)}"]`); if(!slot)return;
+          const chip=document.createElement('div'); chip.className=`event ${eventColor(event.type)}`; chip.style.top=`${5+(start%60)/60*68}px`; chip.style.height=`${Math.max(30,(end-start)/60*68-10)}px`;
+          chip.innerHTML=`${escapeHtml(event.name)}<span>${escapeHtml(event.start)} · ${escapeHtml(event.end)}</span>`; slot.appendChild(chip);
+        });
+      }
+      function build24HourGrid(){
+        if(!grid24)return;
+        let html='<div class="day"></div>'+gridLabels.map((label,index)=>`<div class="day${index===1?' today':''}">${label}</div>`).join('');
+        for(let hour=0;hour<24;hour++){
+          html+=`<div class="time">${String(hour).padStart(2,'0')}:00</div>`;
+          gridDays.forEach((day,index)=>{html+=`<div class="slot" data-day-index="${index}" data-hour="${hour}" aria-label="${day} ${String(hour).padStart(2,'0')} heures"></div>`;});
+        }
+        grid24.innerHTML=html; renderGridEvents();
+      }
+      build24HourGrid(); renderAgenda();
+      document.getElementById('customList').addEventListener('click',()=>setTimeout(()=>{renderGridEvents();renderAgenda();},0));
+      document.getElementById('addEvent').addEventListener('click',()=>setTimeout(()=>{renderGridEvents();renderAgenda();},0));
+      document.getElementById('startFresh').addEventListener('click',()=>setTimeout(renderGridEvents,0));
+      const pastedImageInput=document.getElementById('scheduleImage');
+      document.addEventListener('paste',event=>{
+        const item=[...(event.clipboardData?.items||[])].find(candidate=>candidate.type.startsWith('image/'));
+        if(!item)return;
+        const file=item.getAsFile(); if(!file)return;
+        try{const transfer=new DataTransfer();transfer.items.add(file);pastedImageInput.files=transfer.files;}catch(error){}
+        pastedImageInput.dispatchEvent(new Event('change',{bubbles:true})); notice('Capture collée : lecture du planning en cours.');
+      });
+      let authMode='login'; let supabaseClient; let supabaseLoader;
+      const authDialog=document.getElementById('authDialog'); const authButton=document.getElementById('accountButton'); const authTitle=document.getElementById('authTitle'); const authCopy=document.getElementById('authCopy'); const authSubmit=document.getElementById('authSubmit'); const authToggle=document.getElementById('authToggle'); const authState=document.getElementById('authState');
+      function paintAuthMode(){const signup=authMode==='signup';authTitle.textContent=signup?'Créer mon compte':'Se connecter';authCopy.textContent=signup?'Enregistrez votre planning et retrouvez-le sur votre iPhone.':'Retrouvez votre planning sur tous vos appareils.';authSubmit.textContent=signup?'Créer mon compte':'Se connecter';authToggle.textContent=signup?'J’ai déjà un compte':'Créer un compte';document.getElementById('authPassword').autocomplete=signup?'new-password':'current-password';}
+      function loadSupabase(){
+        const url=window.PLP_SUPABASE_URL; const key=window.PLP_SUPABASE_ANON_KEY;
+        if(!url||!key)return Promise.reject(new Error('SUPABASE_CONFIG_MISSING'));
+        if(window.supabase?.createClient)return Promise.resolve(window.supabase.createClient(url,key));
+        if(supabaseLoader)return supabaseLoader;
+        supabaseLoader=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';script.onload=()=>window.supabase?.createClient?resolve(window.supabase.createClient(url,key)):reject(new Error('Supabase client indisponible'));script.onerror=()=>reject(new Error('Supabase client indisponible'));document.head.appendChild(script)});return supabaseLoader;
+      }
+      authButton.addEventListener('click',()=>{paintAuthMode();authState.textContent='Connexion sécurisée via Supabase.';authDialog.showModal();});
+      document.getElementById('closeAuth').addEventListener('click',()=>authDialog.close());
+      authToggle.addEventListener('click',()=>{authMode=authMode==='login'?'signup':'login';paintAuthMode();});
+      authSubmit.addEventListener('click',async()=>{
+        const email=document.getElementById('authEmail').value.trim(); const password=document.getElementById('authPassword').value;
+        if(!email||password.length<8){authState.textContent='Saisissez un email et un mot de passe d’au moins 8 caractères.';return;}
+        authSubmit.disabled=true;authState.textContent='Connexion en cours…';
+        try{supabaseClient=supabaseClient||await loadSupabase();const result=authMode==='signup'?await supabaseClient.auth.signUp({email,password}):await supabaseClient.auth.signInWithPassword({email,password});if(result.error)throw result.error;authState.textContent=authMode==='signup'?'Compte créé. Vérifiez votre email si nécessaire.':'Connexion réussie.';notice(authMode==='signup'?'Votre compte PLP est prêt.':'Vous êtes connecté à PLP.');setTimeout(()=>authDialog.close(),900);}catch(error){authState.textContent=error.message==='SUPABASE_CONFIG_MISSING'?'Supabase n’est pas encore configuré pour ce site. Ajoutez l’URL du projet et la clé publique anon.':`Impossible de continuer : ${error.message||'erreur inconnue'}`;}finally{authSubmit.disabled=false;}
+      });
     </script>
   </body>
 </html>
