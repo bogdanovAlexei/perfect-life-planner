@@ -84,6 +84,10 @@
       </main>
     </div><dialog id="authDialog" class="auth-dialog"><form class="auth-card" method="dialog" onsubmit="return false"><div class="auth-head"><div><p class="eyebrow">Votre espace PLP</p><h2 id="authTitle">Se connecter</h2></div><button class="icon-button" id="closeAuth" type="button" aria-label="Fermer">×</button></div><p id="authCopy" class="metric-note">Retrouvez votre planning sur tous vos appareils.</p><label>Email<input id="authEmail" type="email" autocomplete="email" placeholder="vous@exemple.fr" /></label><label>Mot de passe<input id="authPassword" type="password" autocomplete="current-password" placeholder="8 caractères minimum" /></label><button class="primary" id="authSubmit" type="button">Se connecter</button><button class="auth-toggle" id="authToggle" type="button">Créer un compte</button><small id="authState" class="auth-state">Connexion sécurisée via Supabase.</small></form></dialog><div class="toast" role="status" id="toast">Votre planning a été mis à jour.</div>
     <script>
+      window.PLP_SUPABASE_URL='https://rzpfzrisasabacohnhgg.supabase.co';
+      window.PLP_SUPABASE_ANON_KEY='sb_publishable_BP7I5R10jiwQIQL62BKgDA_xFfEdRUy';
+    </script>
+    <script>
       const toast=document.getElementById('toast'); let timeout; function notice(message){toast.textContent=message;toast.classList.add('show');clearTimeout(timeout);timeout=setTimeout(()=>toast.classList.remove('show'),2800)}
       const plannerKey='plp-custom-plages'; const freshKey='plp-fresh-mode'; let customEvents=[]; let freshMode=true; try{customEvents=JSON.parse(localStorage.getItem(plannerKey)||'[]');const savedFresh=localStorage.getItem(freshKey);freshMode=savedFresh===null?true:savedFresh==='true'}catch(error){customEvents=[];freshMode=true}
       const escapeHtml=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
