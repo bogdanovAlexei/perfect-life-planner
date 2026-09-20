@@ -131,7 +131,7 @@
       const eventColor=type=>type==='Travail'?'violet':type==='Énergie'?'coral':'mint';
       function renderAgenda(){
         const agenda=document.getElementById('agendaList');
-        const today=customEvents.filter(event=>event.day==='Mardi').sort((a,b)=>minuteValue(a.start)-minuteValue(b.start));
+        const today=(customHidden?[]:customEvents).filter(event=>event.day==='Mardi').sort((a,b)=>minuteValue(a.start)-minuteValue(b.start));
         if(!today.length){agenda.innerHTML='<p class="empty-custom">Aucune plage pour aujourd’hui.</p>';return;}
         agenda.innerHTML=today.map((event,index)=>`<div class="agenda-row"><time>${escapeHtml(event.start)}</time><span class="agenda-dot"></span><div class="agenda-name">${escapeHtml(event.name)}<small>${escapeHtml(event.type||'Personnel')} · ${escapeHtml(event.start)}–${escapeHtml(event.end)}</small></div></div>`).join('');
       }
