@@ -1,0 +1,2 @@
+date,steps,step_goal,sleep_minutes,active_calories,total_calories,resting_heart_rate,average_heart_rate,stress_average,hrv_ms,activity_name,activity_type,activity_duration_minutes,activity_distance_km
+2026-09-20,7842,10000,438,612,2350,54,72,28,48.5,Course du matin,Running,42,7.3
