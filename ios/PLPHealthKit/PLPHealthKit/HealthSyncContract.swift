@@ -8,8 +8,8 @@ enum HealthSyncContract {
     static let metricsVersion = 1
     static let provenanceCompleteness = "partial"
     static let garminConnectSharedToHealth = false
-    static let initialLookbackDays = 7
-    static let maximumLookbackDays = 30
+    static let initialDayCount = 7
+    static let maximumDayCount = 30
     static let overlapDays = 1
     static let backgroundDeliveryFrequency: HKUpdateFrequency = .hourly
     static let lastSyncAtDefaultsKey = "plp.healthkit.last-sync-at"
@@ -43,31 +43,33 @@ struct HealthSyncWindow {
         lastSyncAt: Date?,
         calendar: Calendar = HealthSyncContract.calendar
     ) -> [Date] {
+        let today = calendar.startOfDay(for: now)
         let maximumLowerBound = calendar.date(
             byAdding: .day,
-            value: -HealthSyncContract.maximumLookbackDays,
-            to: now
-        ) ?? now
+            value: -(HealthSyncContract.maximumDayCount - 1),
+            to: today
+        ) ?? today
         let lowerBound: Date
 
         if let lastSyncAt {
+            let lastSyncDay = calendar.startOfDay(for: lastSyncAt)
             let overlapStart = calendar.date(
                 byAdding: .day,
                 value: -HealthSyncContract.overlapDays,
-                to: lastSyncAt
-            ) ?? lastSyncAt
+                to: lastSyncDay
+            ) ?? lastSyncDay
             lowerBound = max(overlapStart, maximumLowerBound)
         } else {
             lowerBound = calendar.date(
                 byAdding: .day,
-                value: -HealthSyncContract.initialLookbackDays,
-                to: now
-            ) ?? now
+                value: -(HealthSyncContract.initialDayCount - 1),
+                to: today
+            ) ?? today
         }
 
-        var day = calendar.startOfDay(for: min(lowerBound, now))
+        var day = calendar.startOfDay(for: min(lowerBound, today))
         var result: [Date] = []
-        while day <= now {
+        while day <= today && result.count < HealthSyncContract.maximumDayCount {
             result.append(day)
             guard let nextDay = calendar.date(byAdding: .day, value: 1, to: day) else {
                 break

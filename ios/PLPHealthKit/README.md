@@ -7,7 +7,7 @@ Ce dossier contient le premier vrai compagnon natif de Perfect Life Planner. Il 
 - app SwiftUI iOS 17 avec capacité HealthKit et entitlement de livraison en arrière-plan ;
 - demande explicite des permissions de lecture pour les pas, le sommeil, l’énergie active, la fréquence cardiaque au repos et les entraînements ;
 - agrégation locale par journée calendaire et dans le fuseau de l’iPhone ;
-- rattrapage sur 7 jours au premier lancement, puis fenêtre glissante de 30 jours avec un jour de chevauchement ;
+- rattrapage sur exactement 7 jours calendaires au premier lancement, puis fenêtre de rattrapage plafonnée à 30 jours calendaires avec un jour de chevauchement ;
 - observations HealthKit et livraison en arrière-plan horaire ;
 - session Supabase conservée dans le trousseau iOS, jamais dans `UserDefaults` ;
 - envoi REST avec la clé publishable uniquement et `upsert` sur la contrainte du contrat v1 ;
@@ -23,6 +23,13 @@ Ce dossier contient le premier vrai compagnon natif de Perfect Life Planner. Il 
 6. Dans Garmin Connect, activer le partage vers Apple Santé si Garmin est la source utilisée. PLP ne prétend pas que les traces GPS ou les métriques Garmin propriétaires sont disponibles via HealthKit.
 
 Le simulateur iOS ne permet pas de valider les livraisons HealthKit en arrière-plan. Le test de référence se fait sur iPhone, écran verrouillé, après une première synchronisation au premier plan.
+
+## Points de livraison à valider sur Mac et dans Supabase
+
+- `PLP_DEVELOPMENT_TEAM` reste volontairement un placeholder tant qu'un Team ID Apple réel n'est pas fourni. Il doit être renseigné dans `Config/PLPHealthKit.xcconfig` sur le Mac de signature, puis la capacité HealthKit doit être vérifiée dans Signing & Capabilities.
+- La livraison en arrière-plan doit être observée sur un iPhone réel : synchronisation initiale au premier plan, verrouillage, ajout d'une donnée Santé, réveil de l'app par `HKObserverQuery`, puis vérification de l'`upsert` et de la fenêtre de rattrapage.
+- Dans Supabase, activer **Leaked Password Protection** dans Authentication → Password Security avant la mise en production. Cette option est une configuration Auth distante, pas une migration SQL : [documentation Supabase](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
+- Les fichiers de `supabase/migrations/` utilisent les versions déjà présentes à distance. Avant un prochain `supabase db push`, vérifier la liste locale/distante et ne pas recréer les anciennes versions supprimées.
 
 ## Vérification de bout en bout
 

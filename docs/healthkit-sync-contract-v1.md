@@ -46,6 +46,6 @@ Les constantes versionnées sont centralisées dans [`HealthSyncContract.swift`]
 
 ## Vérification iPhone à venir
 
-Le compagnon utilise `HKObserverQuery` avec la livraison en arrière-plan HealthKit, puis relit une fenêtre de rattrapage depuis le dernier envoi connu. La fenêtre est limitée à 30 jours et recouvre le dernier jour déjà envoyé pour absorber les corrections tardives d'Apple Santé. L'app conserve uniquement le jeton de session Supabase dans le trousseau iOS et transmet les agrégats via l'API REST avec la clé publishable.
+Le compagnon utilise `HKObserverQuery` avec la livraison en arrière-plan HealthKit, puis relit une fenêtre de rattrapage depuis le dernier envoi connu. Le premier rattrapage couvre exactement 7 jours calendaires ; les suivants sont plafonnés à 30 jours calendaires et recouvrent le dernier jour déjà envoyé pour absorber les corrections tardives d'Apple Santé. L'app conserve uniquement le jeton de session Supabase dans le trousseau iOS et transmet les agrégats via l'API REST avec la clé publishable.
 
 Activer Garmin Connect → Apple Santé, autoriser trois types minimum (pas, sommeil, activité), synchroniser la montre au premier plan, puis vérifier le rattrapage sur 24 à 72 heures. Comparer une activité au fichier FIT : l'absence attendue du GPS et des séries détaillées doit rester visible.

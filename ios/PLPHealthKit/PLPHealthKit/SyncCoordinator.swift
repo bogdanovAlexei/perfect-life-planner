@@ -22,7 +22,6 @@ final class SyncCoordinator: ObservableObject {
     private let supabase: SupabaseRESTClient?
     private let configurationError: Error?
     private let defaults = UserDefaults.standard
-    private let lastSyncKey = HealthSyncContract.lastSyncAtDefaultsKey
     private var monitoringInstalled = false
 
     init() {
@@ -35,7 +34,6 @@ final class SyncCoordinator: ObservableObject {
             supabase = nil
             configurationError = error
         }
-        lastSyncAt = defaults.object(forKey: lastSyncKey) as? Date
         installBackgroundMonitoring()
 
         Task { [weak self] in
@@ -62,6 +60,8 @@ final class SyncCoordinator: ObservableObject {
         statusMessage = "Connexion sécurisée…"
         do {
             accountEmail = try await supabase.signIn(email: email, password: password)
+            let userID = try await supabase.sessionUserID()
+            lastSyncAt = loadLastSyncAt(for: userID)
             isAuthenticated = true
             status = .ready
             statusMessage = "Compte connecté. Autorisez Apple Santé pour activer la synchronisation."
@@ -72,11 +72,18 @@ final class SyncCoordinator: ObservableObject {
     }
 
     func signOut() async {
-        await supabase?.signOut()
         isAuthenticated = false
         accountEmail = nil
-        status = .signedOut
-        statusMessage = "Connectez-vous pour commencer."
+        lastSyncAt = nil
+
+        do {
+            try await supabase?.signOut()
+            status = .signedOut
+            statusMessage = "Connectez-vous pour commencer."
+        } catch {
+            status = .failed
+            statusMessage = "Session locale supprimée, mais la révocation Supabase a échoué : \(error.localizedDescription)"
+        }
     }
 
     func authorizeAndSync() async {
@@ -110,6 +117,9 @@ final class SyncCoordinator: ObservableObject {
 
     private func restoreSession() async {
         guard let supabase, await supabase.restoreSession() else { return }
+        if let userID = try? await supabase.sessionUserID() {
+            lastSyncAt = loadLastSyncAt(for: userID)
+        }
         isAuthenticated = true
         status = .ready
         statusMessage = "Session restaurée. Apple Santé se synchronisera en arrière-plan après autorisation."
@@ -129,6 +139,8 @@ final class SyncCoordinator: ObservableObject {
             throw configurationError ?? ConfigurationError.missing("Supabase")
         }
         let userID = try await supabase.sessionUserID()
+        let userLastSyncAt = loadLastSyncAt(for: userID)
+        lastSyncAt = userLastSyncAt
         status = .syncing
         statusMessage = "Lecture des agrégats Apple Santé…"
 
@@ -136,7 +148,7 @@ final class SyncCoordinator: ObservableObject {
         var payloads: [DailyHealthSummaryPayload] = []
         let capturedAt = HealthSyncContract.capturedAt(for: now)
         let calendar = HealthSyncContract.calendar
-        for day in HealthSyncWindow.dayStarts(now: now, lastSyncAt: lastSyncAt, calendar: calendar) {
+        for day in HealthSyncWindow.dayStarts(now: now, lastSyncAt: userLastSyncAt, calendar: calendar) {
             guard let end = calendar.date(byAdding: .day, value: 1, to: day) else { continue }
             let metrics = try await healthKit.dailyMetrics(from: day, to: min(end, now))
             if !metrics.isEmpty {
@@ -162,11 +174,19 @@ final class SyncCoordinator: ObservableObject {
 
         try await supabase.upsert(payloads)
         lastSyncAt = now
-        defaults.set(now, forKey: lastSyncKey)
+        defaults.set(now, forKey: lastSyncKey(for: userID))
         status = .synced
         statusMessage = payloads.isEmpty
             ? "Apple Santé autorisée, mais aucun agrégat disponible sur la période."
             : "\(payloads.count) journée(s) synchronisée(s) automatiquement."
+    }
+
+    private func lastSyncKey(for userID: String) -> String {
+        "\(HealthSyncContract.lastSyncAtDefaultsKey).\(userID)"
+    }
+
+    private func loadLastSyncAt(for userID: String) -> Date? {
+        defaults.object(forKey: lastSyncKey(for: userID)) as? Date
     }
 
 }

@@ -7,11 +7,17 @@ const testsDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.dirname(testsDirectory);
 const fixturePath = path.join(testsDirectory, 'fixtures', 'healthkit-daily-summary-v1.json');
 const contractPath = path.join(projectRoot, 'ios', 'PLPHealthKit', 'PLPHealthKit', 'HealthSyncContract.swift');
-const migrationPath = path.join(projectRoot, 'supabase', 'migrations', '20260921020000_create_health_daily_summaries.sql');
+const supabaseClientPath = path.join(projectRoot, 'ios', 'PLPHealthKit', 'PLPHealthKit', 'SupabaseRESTClient.swift');
+const syncCoordinatorPath = path.join(projectRoot, 'ios', 'PLPHealthKit', 'PLPHealthKit', 'SyncCoordinator.swift');
+const healthKitManagerPath = path.join(projectRoot, 'ios', 'PLPHealthKit', 'PLPHealthKit', 'HealthKitManager.swift');
+const migrationPath = path.join(projectRoot, 'supabase', 'migrations', '20260921193155_create_health_daily_summaries.sql');
 const webReaderPath = path.join(projectRoot, 'dist', 'js', 'features', 'health-sync.js');
 
 const payload = JSON.parse(fs.readFileSync(fixturePath, 'utf8'));
 const contractSource = fs.readFileSync(contractPath, 'utf8');
+const supabaseClientSource = fs.readFileSync(supabaseClientPath, 'utf8');
+const syncCoordinatorSource = fs.readFileSync(syncCoordinatorPath, 'utf8');
+const healthKitManagerSource = fs.readFileSync(healthKitManagerPath, 'utf8');
 const migration = fs.readFileSync(migrationPath, 'utf8');
 const webReader = fs.readFileSync(webReaderPath, 'utf8');
 
@@ -37,6 +43,14 @@ assert.match(contractSource, /static let sourceRecordKey = "apple_health_daily:v
 assert.match(contractSource, /static let metricsVersion = 1/);
 assert.match(contractSource, /static let provenanceCompleteness = "partial"/);
 assert.match(contractSource, /static let garminConnectSharedToHealth = false/);
+assert.match(contractSource, /static let initialDayCount = 7/);
+assert.match(contractSource, /static let maximumDayCount = 30/);
+assert.match(contractSource, /result\.count < HealthSyncContract\.maximumDayCount/);
+assert.match(supabaseClientSource, /static let authLogout = "auth\/v1\/logout"/);
+assert.match(supabaseClientSource, /func signOut\(\) async throws/);
+assert.match(syncCoordinatorSource, /lastSyncKey\(for userID: String\)/);
+assert.match(syncCoordinatorSource, /loadLastSyncAt\(for: userID\)/);
+assert.match(healthKitManagerSource, /mergedSleepDuration/);
 assert.match(migration, /source in \('garmin_file', 'apple_health'\)/);
 assert.match(migration, /unique \(user_id, source, source_record_key, observed_on\)/);
 assert.match(webReader, /const HEALTH_SOURCE_APPLE = 'apple_health'/);

@@ -154,12 +154,11 @@ final class HealthKitManager: @unchecked Sendable {
                     return
                 }
 
-                let total = (samples as? [HKCategorySample] ?? []).reduce(0.0) { partial, sample in
-                    guard self.isAsleep(sample) else { return partial }
-                    let overlapStart = max(start, sample.startDate)
-                    let overlapEnd = min(end, sample.endDate)
-                    return partial + max(0, overlapEnd.timeIntervalSince(overlapStart))
-                }
+                let total = self.mergedSleepDuration(
+                    samples as? [HKCategorySample] ?? [],
+                    from: start,
+                    to: end
+                )
                 continuation.resume(returning: total > 0 ? total / 60 : nil)
             }
             store.execute(query)
@@ -184,6 +183,45 @@ final class HealthKitManager: @unchecked Sendable {
     private func isAsleep(_ sample: HKCategorySample) -> Bool {
         sample.value != HKCategoryValueSleepAnalysis.inBed.rawValue &&
             sample.value != HKCategoryValueSleepAnalysis.awake.rawValue
+    }
+
+    private func mergedSleepDuration(
+        _ samples: [HKCategorySample],
+        from start: Date,
+        to end: Date
+    ) -> TimeInterval {
+        let intervals = samples.compactMap { sample -> DateInterval? in
+            guard isAsleep(sample) else { return nil }
+            let overlapStart = max(start, sample.startDate)
+            let overlapEnd = min(end, sample.endDate)
+            guard overlapEnd > overlapStart else { return nil }
+            return DateInterval(start: overlapStart, end: overlapEnd)
+        }.sorted { $0.start < $1.start }
+
+        var total: TimeInterval = 0
+        var currentStart: Date?
+        var currentEnd: Date?
+
+        for interval in intervals {
+            guard let activeStart = currentStart, let activeEnd = currentEnd else {
+                currentStart = interval.start
+                currentEnd = interval.end
+                continue
+            }
+
+            if interval.start <= activeEnd {
+                currentEnd = max(activeEnd, interval.end)
+            } else {
+                total += activeEnd.timeIntervalSince(activeStart)
+                currentStart = interval.start
+                currentEnd = interval.end
+            }
+        }
+
+        if let activeStart = currentStart, let activeEnd = currentEnd {
+            total += activeEnd.timeIntervalSince(activeStart)
+        }
+        return total
     }
 }
 

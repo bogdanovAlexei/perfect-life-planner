@@ -12,6 +12,7 @@ actor SupabaseRESTClient {
 
     private enum Endpoint {
         static let authToken = "auth/v1/token"
+        static let authLogout = "auth/v1/logout"
         static let dailySummaries = "rest/v1/health_daily_summaries"
     }
 
@@ -24,13 +25,7 @@ actor SupabaseRESTClient {
     }
 
     func sessionUserID() throws -> String {
-        guard let raw = try keychain.read(forKey: Key.session),
-              let data = raw.data(using: .utf8),
-              let session = try? decoder.decode(StoredSession.self, from: data)
-        else {
-            throw SupabaseClientError.notAuthenticated
-        }
-        return session.userID
+        try storedSession().userID
     }
 
     func signIn(email: String, password: String) async throws -> String? {
@@ -48,10 +43,7 @@ actor SupabaseRESTClient {
     }
 
     func restoreSession() async -> Bool {
-        guard let raw = try? keychain.read(forKey: Key.session),
-              let data = raw.data(using: .utf8),
-              let stored = try? decoder.decode(StoredSession.self, from: data)
-        else {
+        guard let stored = try? storedSession() else {
             return false
         }
 
@@ -68,8 +60,22 @@ actor SupabaseRESTClient {
         }
     }
 
-    func signOut() {
-        try? keychain.delete(forKey: Key.session)
+    func signOut() async throws {
+        // Always clear the device copy, even if the network revocation fails.
+        // This prevents a lost device from retaining a usable local session.
+        defer { try? keychain.delete(forKey: Key.session) }
+
+        guard (try? storedSession()) != nil else { return }
+        let session = try await validSession()
+        var request = URLRequest(
+            url: configuration.supabaseURL.appendingPathComponent(Endpoint.authLogout)
+        )
+        request.httpMethod = "POST"
+        request.setValue(configuration.supabasePublishableKey, forHTTPHeaderField: "apikey")
+        request.setValue("Bearer \(session.accessToken)", forHTTPHeaderField: "Authorization")
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        try validate(response, data: data)
     }
 
     func upsert(_ payloads: [DailyHealthSummaryPayload]) async throws {
@@ -92,15 +98,20 @@ actor SupabaseRESTClient {
     }
 
     private func validSession() async throws -> StoredSession {
-        guard let raw = try keychain.read(forKey: Key.session),
+        let session = try storedSession()
+
+        if session.isExpiredSoon {
+            return try await refresh(using: session.refreshToken)
+        }
+        return session
+    }
+
+    private func storedSession() throws -> StoredSession {
+        guard let raw = try? keychain.read(forKey: Key.session),
               let data = raw.data(using: .utf8),
               let session = try? decoder.decode(StoredSession.self, from: data)
         else {
             throw SupabaseClientError.notAuthenticated
-        }
-
-        if session.isExpiredSoon {
-            return try await refresh(using: session.refreshToken)
         }
         return session
     }
