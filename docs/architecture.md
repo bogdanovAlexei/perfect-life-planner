@@ -9,7 +9,10 @@ La version publiée est une application statique : `dist/index.html` ne contient
 - `dist/js/features/planner-ui.js` : création, masquage et édition des plages.
 - `dist/js/features/planner-grid.js` : grille 24 heures et rendu des événements.
 - `dist/js/features/schedule-ocr.js` : import d’image et reconnaissance de l’emploi du temps.
-- `dist/js/features/health.js` : import Garmin, cartes santé et synchronisation des métriques.
+- `dist/js/features/health-dashboard.js` : état local, affichage et cartes santé.
+- `dist/js/features/garmin-parsers.js` : lecture locale des exports Garmin FIT, CSV, JSON et ZIP.
+- `dist/js/features/health-sync.js` : conversion et synchronisation privée Supabase.
+- `dist/js/features/health.js` : orchestration des boutons d’import, démonstration et effacement.
 - `dist/js/features/auth.js` : inscription, connexion et session Supabase.
 - `supabase/migrations/` : structure de base de données versionnée.
 - `tests/fixtures/` : jeux de données non personnels pour les vérifications.
