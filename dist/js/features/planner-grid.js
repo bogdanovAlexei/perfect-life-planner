@@ -65,3 +65,33 @@ const grid24=document.querySelector('.grid');
         try{const transfer=new DataTransfer();transfer.items.add(file);pastedImageInput.files=transfer.files;}catch(error){}
         pastedImageInput.dispatchEvent(new Event('change',{bubbles:true})); notice('Capture collée : lecture du planning en cours.');
       });
+
+      // The base renderer stays responsible for layout; this adapter supplies the selected week.
+      const baseRenderGridEvents=renderGridEvents;
+      function selectedWeekEvents(){const week=window.PLPWeek?.current?.();const key=week?.key;return customEvents.filter(event=>event.flex==='fixed'||event.weekKey===key||(!event.weekKey&&week?.current));}
+      function renderCurrentTimeLine(){
+        if(!grid24)return;
+        let line=grid24.querySelector('.current-time-line');
+        if(!line){line=document.createElement('div');line.className='current-time-line';grid24.appendChild(line);}
+        const week=window.PLPWeek?.current?.();
+        if(!week?.current){line.hidden=true;return;}
+        const now=new Date(); const minutes=now.getHours()*60+now.getMinutes()+now.getSeconds()/60;
+        line.hidden=false; line.style.top=`${42+minutes/60*68}px`; line.innerHTML=`<span class="current-time-label">${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}</span>`;
+      }
+      function renderGridEventsForSelectedWeek(){
+        const previousEvents=customEvents; const previousFresh=freshMode; const week=window.PLPWeek?.current?.();
+        customEvents=selectedWeekEvents(); if(!week?.current)freshMode=true;
+        try{baseRenderGridEvents();}finally{customEvents=previousEvents;freshMode=previousFresh;}
+        renderCurrentTimeLine();
+      }
+      function renderAgendaForSelectedWeek(){
+        const agenda=document.getElementById('agendaList'); if(!agenda)return;
+        const day=window.PLPWeek?.getAgendaDayName?.()||'Mardi'; const events=selectedWeekEvents().filter(event=>event.day===day).sort((a,b)=>minuteValue(a.start)-minuteValue(b.start));
+        if(!events.length){agenda.innerHTML='<p class="empty-custom">Aucune plage pour cette journée.</p>';return;}
+        agenda.innerHTML=events.map(event=>`<div class="agenda-row"><time>${escapeHtml(event.start)}</time><span class="agenda-dot"></span><div class="agenda-name">${escapeHtml(event.name)}<small>${escapeHtml(event.type||'Personnel')} · ${escapeHtml(event.start)}–${escapeHtml(event.end)}</small></div></div>`).join('');
+      }
+      renderGridEvents=renderGridEventsForSelectedWeek; renderAgenda=renderAgendaForSelectedWeek;
+      window.PLPWeek?.subscribe(()=>{renderGridEvents();renderAgenda();});
+      window.PLPWeek?.refresh?.();
+      renderGridEvents(); renderAgenda();
+      setInterval(renderCurrentTimeLine,60000);
