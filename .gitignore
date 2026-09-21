@@ -39,6 +39,10 @@ next-env.d.ts
 /dist/*
 !/dist/index.html
 !/dist/favicon.svg
+!/dist/css/
+!/dist/css/**
+!/dist/js/
+!/dist/js/**
 /.wrangler/
 # Checkout-local execution profile and tool state; never publish them.
 /.sites-runtime/
