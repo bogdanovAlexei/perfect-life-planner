@@ -1,32 +1,181 @@
-const toast=document.getElementById('toast'); let timeout; function notice(message){toast.textContent=message;toast.classList.add('show');clearTimeout(timeout);timeout=setTimeout(()=>toast.classList.remove('show'),2800)}
-      const plannerKey='plp-custom-plages'; const freshKey='plp-fresh-mode'; const hiddenKey='plp-custom-hidden'; const createEventId=()=>`evt-${Date.now()}-${Math.random().toString(36).slice(2,8)}`; let customEvents=[]; let freshMode=true; let customHidden=false; try{customEvents=JSON.parse(localStorage.getItem(plannerKey)||'[]').map(event=>({...event,id:event.id||createEventId(),description:event.description||''}));const savedFresh=localStorage.getItem(freshKey);freshMode=savedFresh===null?true:savedFresh==='true';customHidden=localStorage.getItem(hiddenKey)==='true'}catch(error){customEvents=[];freshMode=true;customHidden=false}
-      const escapeHtml=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-      function saveEvents(){try{localStorage.setItem(plannerKey,JSON.stringify(customEvents))}catch(error){}}
-      function paintFreshMode(){document.querySelectorAll('.grid .event[data-demo="true"]').forEach(event=>event.style.display=freshMode?'none':'');const button=document.getElementById('startFresh');button.textContent=freshMode?'Afficher l’exemple':'Partir de zéro';}
-      function renderCustomEvents(){const list=document.getElementById('customList');const timeline=document.getElementById('customTimeline');const card=document.getElementById('customEventsCard');const count=document.getElementById('customCount');if(count)count.textContent=customEvents.length?`${customEvents.length} plage${customEvents.length>1?'s':''}`:'Aucune plage';if(customHidden){timeline.hidden=true;timeline.setAttribute('aria-hidden','true');if(card){card.hidden=true;card.setAttribute('aria-hidden','true');}list.innerHTML='';timeline.innerHTML='';return;}timeline.hidden=false;timeline.setAttribute('aria-hidden','false');if(card){card.hidden=false;card.setAttribute('aria-hidden','false');}if(!customEvents.length){list.innerHTML='<p class="empty-custom">Aucune plage personnalisée pour le moment.</p>';timeline.innerHTML='';return;}list.innerHTML=customEvents.map((event,index)=>`<div class="custom-item"><div><strong>${escapeHtml(event.name)}</strong><small>${escapeHtml(event.day)} · ${escapeHtml(event.start)}–${escapeHtml(event.end)}</small>${event.description?`<small>${escapeHtml(event.description)}</small>`:''}</div><div class="custom-actions"><button class="tag-button" data-toggle="${index}" aria-label="Changer la souplesse">${event.flex==='fixed'?'Fixe':'Flexible'}</button><button class="remove-button" data-remove="${index}" aria-label="Supprimer ${escapeHtml(event.name)}">×</button></div></div>`).join('');timeline.innerHTML=customEvents.map(event=>`<div class="custom-timeline-item"><span class="timeline-dot"></span><div><strong>${escapeHtml(event.name)}</strong><small>${escapeHtml(event.day)} · ${escapeHtml(event.start)}–${escapeHtml(event.end)} · ${event.flex==='fixed'?'Plage fixe':'Plage flexible'}</small>${event.description?`<small>${escapeHtml(event.description)}</small>`:''}</div></div>`).join('');list.querySelectorAll('[data-remove]').forEach(button=>button.addEventListener('click',()=>{customEvents.splice(Number(button.dataset.remove),1);saveEvents();renderCustomEvents();renderGridEvents();renderAgenda();notice('La plage a été retirée.');}));list.querySelectorAll('[data-toggle]').forEach(button=>button.addEventListener('click',()=>{const event=customEvents[Number(button.dataset.toggle)];event.flex=event.flex==='fixed'?'flexible':'fixed';saveEvents();renderCustomEvents();renderGridEvents();renderAgenda();notice(event.flex==='fixed'?'Plage verrouillée.':'Plage rendue flexible.');}));}
-      document.getElementById('startFresh').addEventListener('click',()=>{freshMode=!freshMode;try{localStorage.setItem(freshKey,String(freshMode))}catch(error){}paintFreshMode();notice(freshMode?'Le planning exemple est masqué. Ajoutez vos propres plages.':'Le planning exemple est affiché.');});
-      const hideCustomButton=document.getElementById('hideCustom'); const clearCustomButton=document.getElementById('clearCustom');
-      function paintCustomVisibility(){if(hideCustomButton)hideCustomButton.textContent=customHidden?'Afficher mes plages':'Masquer mes plages';renderCustomEvents();renderGridEvents();renderAgenda();}
-      hideCustomButton?.addEventListener('click',()=>{customHidden=!customHidden;try{localStorage.setItem(hiddenKey,String(customHidden))}catch(error){}paintCustomVisibility();notice(customHidden?'Vos plages sont masquées.':'Vos plages sont affichées.');});
-      clearCustomButton?.addEventListener('click',()=>{if(!customEvents.length){notice('Aucune plage à vider.');return;}customEvents=[];customHidden=false;saveEvents();try{localStorage.setItem(hiddenKey,'false')}catch(error){}paintCustomVisibility();notice('Toutes vos plages ajoutées ont été retirées.');});
-      document.getElementById('optimize').addEventListener('click',()=>{const flexible=customEvents.filter(event=>event.flex==='flexible').length;notice(flexible?`${flexible} plage${flexible>1?'s':''} flexible${flexible>1?'s':''} prête${flexible>1?'s':''} à être déplacée.`:'Ajoutez une plage flexible pour laisser PLP réorganiser votre semaine.');});
-      document.getElementById('viewAll').addEventListener('click',()=>notice('Vue de la journée sélectionnée.'));
-      document.getElementById('addEvent').addEventListener('click',()=>{const input=document.getElementById('eventName');const name=input.value.trim();const start=document.getElementById('eventStart').value;const end=document.getElementById('eventEnd').value;if(!name){input.focus();notice('Donnez un nom à cette plage.');return;}if(!start||!end||end<=start){notice('Vérifiez les heures de début et de fin.');return;}customEvents.push({id:createEventId(),name,description:'',day:document.getElementById('eventDay').value,start,end,flex:document.getElementById('eventFlex').value,type:document.getElementById('eventType').value});saveEvents();renderCustomEvents();input.value='';notice(`« ${name} » a été ajouté à votre planning.`);});
-      document.getElementById('connectZimbra').addEventListener('click',()=>{window.open('https://webmail.unicaen.fr','_blank','noopener,noreferrer');notice('Zimbra Unicaen s’ouvre dans un nouvel onglet.')});
-      const imageInput=document.getElementById('scheduleImage');const preview=document.getElementById('photoPreview');const photoState=document.getElementById('photoState');const progress=document.getElementById('ocrProgress');const progressBar=document.getElementById('ocrProgressBar');let ocrLoader;
-      function loadOcr(){if(window.Tesseract)return Promise.resolve(window.Tesseract);if(ocrLoader)return ocrLoader;ocrLoader=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';script.onload=()=>resolve(window.Tesseract);script.onerror=()=>reject(new Error('OCR indisponible'));document.head.appendChild(script)});return ocrLoader;}
-      async function recognizeSchedule(file,onProgress){const Tesseract=await loadOcr();if(!Tesseract.createWorker)return {result:await Tesseract.recognize(file,'fra',{logger:onProgress}),worker:null,Tesseract};const worker=await Tesseract.createWorker('fra',Tesseract.OEM?.LSTM_ONLY??1,{logger:onProgress});try{await worker.setParameters({tessedit_pageseg_mode:Tesseract.PSM?.SPARSE_TEXT||'11',preserve_interword_spaces:'1'});return {result:await worker.recognize(file,{}, {text:true,blocks:true,tsv:true}),worker,Tesseract};}catch(error){await worker.terminate();throw error;}}
-      function toTime(minutes){const h=Math.floor(minutes/60)%24;const m=minutes%60;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`}
-      function parseSchedule(text){const days=[['Lundi','lundi','lun'],['Mardi','mardi','mar'],['Mercredi','mercredi','mer'],['Jeudi','jeudi','jeu'],['Vendredi','vendredi','ven'],['Samedi','samedi','sam'],['Dimanche','dimanche','dim']];let currentDay='Mardi';const imported=[];const lines=text.split(/\r?\n/).map(line=>line.trim()).filter(Boolean);lines.forEach(line=>{const lower=line.toLowerCase();const day=days.find(entry=>lower.includes(entry[1])||lower.includes(entry[2]));if(day)currentDay=day[0];const range=line.match(/(\d{1,2})\s*[:hH.]\s*(\d{2})\s*(?:-|–|—|à|a)\s*(\d{1,2})\s*[:hH.]\s*(\d{2})/);if(range){const start=Number(range[1])*60+Number(range[2]);const end=Number(range[3])*60+Number(range[4]);const rawName=line.replace(range[0],'').replace(/\b(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche|lun|mar|mer|jeu|ven|sam|dim)\.?\b/ig,'').replace(/^[-–—:|\s]+|[-–—:|\s]+$/g,'').trim();const name=(typeof cleanOcrWords==='function'?cleanOcrWords([{text:rawName,confidence:100}]):rawName)||'Cours importé';imported.push({name:name.slice(0,70),day:currentDay,start:toTime(start),end:toTime(end),flex:'fixed',type:'Travail'});return;}const matches=[...line.matchAll(/\b([01]?\d|2[0-3])\s*[:hH.]\s*([0-5]\d)\b/g)];if(matches.length){const start=Number(matches[0][1])*60+Number(matches[0][2]);const rawName=line.replace(/\b([01]?\d|2[0-3])\s*[:hH.]\s*([0-5]\d)\b/g,'').replace(/^[-–—:|\s]+|[-–—:|\s]+$/g,'').trim();const name=(typeof cleanOcrWords==='function'?cleanOcrWords([{text:rawName,confidence:100}]):rawName)||'Cours importé';imported.push({name:name.slice(0,70),day:currentDay,start:toTime(start),end:toTime(start+60),flex:'fixed',type:'Travail'});}});return imported;}
-      imageInput.addEventListener('change',async()=>{const file=imageInput.files?.[0];if(!file)return;preview.src=URL.createObjectURL(file);preview.style.display='block';progress.style.display='block';progressBar.style.width='4%';photoState.textContent='Lecture de la photo en cours…';let recognition;try{recognition=await recognizeSchedule(file,message=>{if(message.status==='recognizing text'&&message.progress)progressBar.style.width=`${Math.max(4,Math.round(message.progress*100))}%`});const result=recognition.result;const pixels=window.parseSchedulePixels?await window.parseSchedulePixels(file,result.data,recognition.worker,recognition.Tesseract):[];const layout=window.parseScheduleLayout?window.parseScheduleLayout(result.data):[];const imported=pixels.length>=3?pixels:layout;const parsed=imported.length?imported:parseSchedule(result.data.text);if(!parsed.length){photoState.textContent='Aucun horaire clair détecté. Ajoutez les plages manuellement ou essayez une photo plus nette.';notice('Photo lue, mais aucun horaire identifiable.');}else{customEvents=parsed.map(event=>({...event,id:event.id||createEventId(),description:event.description||''}));freshMode=true;try{localStorage.setItem(freshKey,'true')}catch(error){}saveEvents();renderCustomEvents();paintFreshMode();progressBar.style.width='100%';photoState.textContent=`${parsed.length} plage${parsed.length>1?'s':''} détectée${parsed.length>1?'s':''}. Vérifiez le brouillon ci-dessous.`;notice('Le planning issu de la photo est prêt à vérifier.');}}catch(error){progress.style.display='none';photoState.textContent='La lecture automatique n’a pas pu démarrer. Vos plages restent disponibles en saisie manuelle.';notice('Import photo indisponible pour le moment.');}finally{await recognition?.worker?.terminate();}});
-      paintFreshMode();renderCustomEvents();
+(function () {
+  const planner = window.PLPPlanner;
+  const toast = document.getElementById('toast');
+  let toastTimeout;
 
-      // Week-aware metadata keeps fixed blocks recurring while flexible blocks stay in their week.
-      function currentPlannerWeekKey(){return window.PLPWeek?.currentKey?.()||'';}
-      function normalizeEventWeek(event){if(event.flex==='fixed')return {...event,weekKey:null};return {...event,weekKey:event.weekKey||currentPlannerWeekKey()};}
-      const normalizedEvents=customEvents.map(normalizeEventWeek);
-      if(JSON.stringify(normalizedEvents)!==JSON.stringify(customEvents)){customEvents=normalizedEvents;saveEvents();}
-      const addEventButton=document.getElementById('addEvent');
-      addEventButton?.addEventListener('click',()=>{const lengthBefore=customEvents.length;setTimeout(()=>{if(customEvents.length<=lengthBefore)return;customEvents.slice(lengthBefore).forEach(event=>Object.assign(event,normalizeEventWeek(event)));saveEvents();renderCustomEvents();renderGridEvents();renderAgenda();},0);});
-      document.getElementById('customList')?.addEventListener('click',event=>{const button=event.target.closest('[data-toggle]');if(!button)return;const index=Number(button.dataset.toggle);setTimeout(()=>{const item=customEvents[index];if(!item)return;Object.assign(item,normalizeEventWeek(item));saveEvents();renderGridEvents();renderAgenda();},0);});
-      document.getElementById('saveEdited')?.addEventListener('click',()=>setTimeout(()=>{customEvents.forEach(event=>Object.assign(event,normalizeEventWeek(event)));saveEvents();renderGridEvents();renderAgenda();},0));
+  window.notice = function notice(message) {
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => toast.classList.remove('show'), 2800);
+  };
+
+  function paintControls(state = planner.getState()) {
+    const freshButton = document.getElementById('startFresh');
+    const hideButton = document.getElementById('hideCustom');
+    if (freshButton) freshButton.textContent = state.freshMode ? 'Afficher l’exemple' : 'Partir de zéro';
+    if (hideButton) hideButton.textContent = state.hideFlexible ? 'Afficher flexible' : 'Masquer flexible';
+  }
+
+  document.getElementById('startFresh')?.addEventListener('click', () => {
+    const nextValue = !planner.getState().freshMode;
+    planner.setFreshMode(nextValue);
+    notice(nextValue ? 'Le planning exemple est masqué.' : 'Le planning exemple est affiché.');
+  });
+
+  document.getElementById('hideCustom')?.addEventListener('click', () => {
+    const nextValue = !planner.getState().hideFlexible;
+    planner.setHideFlexible(nextValue);
+    notice(nextValue ? 'Les plages flexibles sont masquées.' : 'Les plages flexibles sont affichées.');
+  });
+
+  document.getElementById('clearCustom')?.addEventListener('click', () => {
+    if (!planner.getState().events.length) {
+      notice('Aucune plage à vider.');
+      return;
+    }
+    planner.clearEvents();
+    notice('Toutes vos plages ajoutées ont été retirées.');
+  });
+
+  document.getElementById('optimize')?.addEventListener('click', () => {
+    const flexible = planner.visibleEvents().filter((event) => event.flex === 'flexible').length;
+    notice(flexible ? `${flexible} plage${flexible > 1 ? 's' : ''} flexible${flexible > 1 ? 's' : ''} prête${flexible > 1 ? 's' : ''} à être déplacée.` : 'Ajoutez une plage flexible pour laisser PLP réorganiser votre semaine.');
+  });
+
+  document.getElementById('addEvent')?.addEventListener('click', () => {
+    const nameInput = document.getElementById('eventName');
+    const start = document.getElementById('eventStart').value;
+    const end = document.getElementById('eventEnd').value;
+    const name = nameInput.value.trim();
+    if (!name) {
+      nameInput.focus();
+      notice('Donnez un nom à cette plage.');
+      return;
+    }
+    if (!start || !end || end <= start) {
+      notice('Vérifiez les heures de début et de fin.');
+      return;
+    }
+    planner.addEvent({
+      name,
+      start,
+      end,
+      day: document.getElementById('eventDay').value,
+      flex: document.getElementById('eventFlex').value,
+      type: document.getElementById('eventType').value,
+      source: 'manual',
+    });
+    nameInput.value = '';
+    notice(`« ${name} » a été ajouté à votre planning.`);
+  });
+
+  document.getElementById('connectZimbra')?.addEventListener('click', () => {
+    window.open('https://webmail.unicaen.fr', '_blank', 'noopener,noreferrer');
+    notice('Zimbra Unicaen s’ouvre dans un nouvel onglet.');
+  });
+
+  const imageInput = document.getElementById('scheduleImage');
+  const preview = document.getElementById('photoPreview');
+  const photoState = document.getElementById('photoState');
+  const progress = document.getElementById('ocrProgress');
+  const progressBar = document.getElementById('ocrProgressBar');
+  let ocrLoader;
+
+  function loadOcr() {
+    if (window.Tesseract) return Promise.resolve(window.Tesseract);
+    if (ocrLoader) return ocrLoader;
+    ocrLoader = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
+      script.onload = () => resolve(window.Tesseract);
+      script.onerror = () => reject(new Error('OCR indisponible'));
+      document.head.appendChild(script);
+    });
+    return ocrLoader;
+  }
+
+  async function recognizeSchedule(file, onProgress) {
+    const Tesseract = await loadOcr();
+    if (!Tesseract.createWorker) return { result: await Tesseract.recognize(file, 'fra', { logger: onProgress }), worker: null, Tesseract };
+    const worker = await Tesseract.createWorker('fra', Tesseract.OEM?.LSTM_ONLY ?? 1, { logger: onProgress });
+    try {
+      await worker.setParameters({ tessedit_pageseg_mode: Tesseract.PSM?.SPARSE_TEXT || '11', preserve_interword_spaces: '1' });
+      return { result: await worker.recognize(file, {}, { text: true, blocks: true, tsv: true }), worker, Tesseract };
+    } catch (error) {
+      await worker.terminate();
+      throw error;
+    }
+  }
+
+  function toTime(minutes) {
+    const hour = Math.floor(minutes / 60) % 24;
+    return `${String(hour).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
+  }
+
+  function parseScheduleText(text) {
+    const days = [['Lundi', 'lundi', 'lun'], ['Mardi', 'mardi', 'mar'], ['Mercredi', 'mercredi', 'mer'], ['Jeudi', 'jeudi', 'jeu'], ['Vendredi', 'vendredi', 'ven'], ['Samedi', 'samedi', 'sam'], ['Dimanche', 'dimanche', 'dim']];
+    let currentDay = 'Mardi';
+    return text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).flatMap((line) => {
+      const day = days.find((entry) => line.toLowerCase().includes(entry[1]) || line.toLowerCase().includes(entry[2]));
+      if (day) currentDay = day[0];
+      const match = line.match(/(\d{1,2})\s*[:hH.]\s*(\d{2})\s*(?:-|–|—|à|a)\s*(\d{1,2})\s*[:hH.]\s*(\d{2})/);
+      if (!match) return [];
+      const start = Number(match[1]) * 60 + Number(match[2]);
+      const end = Number(match[3]) * 60 + Number(match[4]);
+      const rawName = line.replace(match[0], '').replace(/\b(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche|lun|mar|mer|jeu|ven|sam|dim)\.?\b/ig, '').replace(/^[-–—:|\s]+|[-–—:|\s]+$/g, '').trim();
+      const name = (window.cleanOcrWords?.([{ text: rawName, confidence: 100 }]) || rawName || 'Cours importé').slice(0, 70);
+      return end > start ? [{ name, day: currentDay, start: toTime(start), end: toTime(end), type: 'Travail' }] : [];
+    });
+  }
+
+  async function importPhoto(file) {
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = 'block';
+    progress.style.display = 'block';
+    progressBar.style.width = '4%';
+    photoState.textContent = 'Lecture de la photo en cours…';
+    let recognition;
+    try {
+      recognition = await recognizeSchedule(file, (message) => {
+        if (message.status === 'recognizing text' && message.progress) progressBar.style.width = `${Math.max(4, Math.round(message.progress * 100))}%`;
+      });
+      const pixels = window.parseSchedulePixels ? await window.parseSchedulePixels(file, recognition.result.data, recognition.worker, recognition.Tesseract) : [];
+      const layout = window.parseScheduleLayout?.(recognition.result.data) || [];
+      const detected = pixels.length >= 3 ? pixels : layout;
+      const parsed = detected.length ? detected : parseScheduleText(recognition.result.data.text);
+      if (!parsed.length) {
+        photoState.textContent = 'Aucun horaire clair détecté. Essayez une photo plus nette ou ajoutez les plages manuellement.';
+        notice('Photo lue, mais aucun horaire identifiable.');
+        return;
+      }
+      const importedCount = planner.importEvents(parsed);
+      progressBar.style.width = '100%';
+      photoState.textContent = `${importedCount} créneau${importedCount > 1 ? 'x' : ''} ajouté${importedCount > 1 ? 's' : ''} à l’EDT. Cliquez sur un créneau pour le corriger.`;
+      notice('Le planning issu de la photo a été ajouté à l’EDT.');
+    } catch {
+      progress.style.display = 'none';
+      photoState.textContent = 'La lecture automatique n’a pas pu démarrer. Vos plages restent disponibles en saisie manuelle.';
+      notice('Import photo indisponible pour le moment.');
+    } finally {
+      await recognition?.worker?.terminate();
+    }
+  }
+
+  imageInput?.addEventListener('change', () => {
+    const file = imageInput.files?.[0];
+    if (file) importPhoto(file);
+  });
+
+  document.addEventListener('paste', (event) => {
+    const item = [...(event.clipboardData?.items || [])].find((candidate) => candidate.type.startsWith('image/'));
+    const file = item?.getAsFile();
+    if (!file) return;
+    importPhoto(file);
+    notice('Capture collée : lecture du planning en cours.');
+  });
+
+  planner.subscribe(paintControls);
+  paintControls();
+}());

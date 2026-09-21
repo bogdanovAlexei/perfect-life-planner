@@ -66,7 +66,7 @@
   }
 
   function updateChrome(currentState) {
-    const range = document.querySelector('.date-range');
+    const range = document.getElementById('weekRange');
     if (range) range.textContent = currentState.range;
 
     const title = document.getElementById('agendaTitle');

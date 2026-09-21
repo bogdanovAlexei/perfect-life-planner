@@ -1,0 +1,170 @@
+/* Calendar-specific layout is separated from the base application stylesheet. */
+.topbar-actions,
+.planner-navigation {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.planner-navigation {
+  margin: -4px 0 14px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f8faff;
+}
+
+.planner-week-range {
+  min-width: 185px;
+  margin-right: auto;
+  font-size: .82rem;
+  font-weight: 750;
+  text-align: center;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.planner-navigation .icon-button {
+  width: 34px;
+  height: 34px;
+}
+
+.planner-navigation .view-all {
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 1px solid #bdcbe5;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.calendar-footer {
+  justify-content: flex-start;
+}
+
+.day-select {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.day-select:hover,
+.day-select:focus-visible {
+  color: #243d78;
+  background: #eef4ff;
+  outline: 2px solid #a9c4ef;
+  outline-offset: -2px;
+}
+
+.event {
+  border: 0;
+  color: inherit;
+  text-align: left;
+  font-family: inherit;
+}
+
+button.event {
+  cursor: pointer;
+}
+
+button.event:hover,
+button.event:focus-visible {
+  filter: brightness(.97);
+  outline: 2px solid #405d98;
+  outline-offset: 1px;
+}
+
+.event.important {
+  box-shadow: inset 3px 0 #c98500;
+}
+
+.important-field {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 8px !important;
+  padding: 9px 10px;
+  border: 1px solid #ead9aa;
+  border-radius: 10px;
+  background: #fffaf0;
+  color: #6d5418 !important;
+}
+
+.important-field input {
+  width: auto !important;
+  accent-color: #b47c00;
+}
+
+.important-field small {
+  grid-column: 2;
+  color: #806b3e;
+  font-weight: 550;
+}
+
+.grid.day-view {
+  grid-template-columns: 54px minmax(104px, 1fr);
+}
+
+.grid.day-view > .view-hidden {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .topbar-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .topbar-actions .secondary,
+  .topbar-actions .primary {
+    min-height: 44px;
+    padding: 10px;
+  }
+
+  .planner-navigation {
+    display: grid;
+    grid-template-columns: 40px 1fr 40px;
+    gap: 7px;
+    margin: 0 0 12px;
+    padding: 7px;
+  }
+
+  .planner-navigation .icon-button {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+
+  .planner-week-range {
+    min-width: 0;
+    margin: 0;
+    font-size: .76rem;
+  }
+
+  .planner-navigation .view-all {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 40px;
+  }
+
+  .calendar-card .grid {
+    grid-template-columns: 50px minmax(0, 1fr);
+  }
+
+  .grid.day-view {
+    grid-template-columns: 50px minmax(0, 1fr);
+  }
+
+  .grid > .mobile-hidden,
+  .grid.day-view > .view-hidden {
+    display: none !important;
+  }
+
+  .grid > .mobile-visible {
+    display: block !important;
+  }
+
+  .calendar-footer {
+    display: flex;
+    padding-top: 12px;
+  }
+}
