@@ -1,6 +1,6 @@
 # Contrat HealthKit v1 pour PLP
 
-Ce contrat prépare le futur compagnon iPhone PLP. Il ne constitue pas encore une app iOS : la web app ne peut pas demander directement l'autorisation HealthKit.
+Ce contrat est implémenté par le compagnon iPhone natif de [`ios/PLPHealthKit`](../ios/PLPHealthKit/README.md). La web app ne peut pas demander directement l'autorisation HealthKit.
 
 ## Flux prévu
 
@@ -26,13 +26,15 @@ La contrainte unique `(user_id, source, source_record_key, observed_on)` rend le
     "workout_count": 1
   },
   "provenance": {
-    "garmin_connect_shared_to_health": true,
+    "garmin_connect_shared_to_health": false,
     "completeness": "partial"
   }
 }
 ```
 
-La version 1 limite volontairement les métriques à `steps`, `sleep_minutes`, `active_calories_kcal`, `resting_heart_rate_bpm` et `workout_count`. Les traces GPS, les séries de fréquence cardiaque, le stress, la VFC et Body Battery restent des données FIT ou Garmin Health API tant qu'elles ne sont pas réellement disponibles dans Apple Santé.
+La version 1 limite volontairement les métriques à `steps`, `sleep_minutes`, `active_calories_kcal`, `resting_heart_rate_bpm` et `workout_count`. L'app renseigne `garmin_connect_shared_to_health` à `false` par défaut : elle ne peut pas prouver depuis HealthKit que Garmin est la source d'origine. Les traces GPS, les séries de fréquence cardiaque, le stress, la VFC et Body Battery restent des données FIT ou Garmin Health API tant qu'elles ne sont pas réellement disponibles dans Apple Santé.
+
+Les constantes versionnées sont centralisées dans [`HealthSyncContract.swift`](../ios/PLPHealthKit/PLPHealthKit/HealthSyncContract.swift). Le lecteur web et la migration SQL doivent rester compatibles avec ces valeurs. Le contrôle statique reproductible se lance avec `node tests/healthkit-contract.mjs`.
 
 ## Règles de sécurité
 
@@ -43,5 +45,7 @@ La version 1 limite volontairement les métriques à `steps`, `sleep_minutes`, `
 - la provenance et la complétude sont affichées pour éviter de présenter une donnée partielle comme une mesure Garmin complète.
 
 ## Vérification iPhone à venir
+
+Le compagnon utilise `HKObserverQuery` avec la livraison en arrière-plan HealthKit, puis relit une fenêtre de rattrapage depuis le dernier envoi connu. La fenêtre est limitée à 30 jours et recouvre le dernier jour déjà envoyé pour absorber les corrections tardives d'Apple Santé. L'app conserve uniquement le jeton de session Supabase dans le trousseau iOS et transmet les agrégats via l'API REST avec la clé publishable.
 
 Activer Garmin Connect → Apple Santé, autoriser trois types minimum (pas, sommeil, activité), synchroniser la montre au premier plan, puis vérifier le rattrapage sur 24 à 72 heures. Comparer une activité au fichier FIT : l'absence attendue du GPS et des séries détaillées doit rester visible.

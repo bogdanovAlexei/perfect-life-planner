@@ -1,0 +1,7 @@
+// Local signing and Supabase configuration for the PLP HealthKit companion.
+// Replace PLP_DEVELOPMENT_TEAM with the Team ID shown in Apple Developer.
+PLP_DEVELOPMENT_TEAM = REPLACE_WITH_APPLE_TEAM_ID
+PLP_BUNDLE_IDENTIFIER = com.perfectlifeplanner.healthkit
+
+SUPABASE_URL = https://rzpfzrisasabacohnhgg.supabase.co
+SUPABASE_PUBLISHABLE_KEY = sb_publishable_BP7I5R10jiwQIQL62BKgDA_xFfEdRUy

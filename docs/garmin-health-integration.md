@@ -20,6 +20,7 @@ Transformer la zone supérieure de Perfect Life Planner en tableau de bord sant�
 
 - **Import d'exports Garmin** : PLP acceptera les fichiers exportés depuis Garmin Connect, notamment les fichiers `.FIT`, `.CSV` et les archives de données personnelles. L'export de bien-être Garmin peut contenir les pas, le sommeil, le stress et la VFC.
 - **Apple Santé sur iPhone** : Garmin Connect peut partager avec Apple Santé les pas, le sommeil, la fréquence cardiaque, l'énergie, la distance et les entraînements compatibles. Cette voie nécessite une app iOS/HealthKit : une simple page web ne peut pas lire directement Apple Santé. PLP prépare cette voie avec le contrat `docs/healthkit-sync-contract-v1.md`, sans prétendre que la synchronisation iPhone est déjà disponible.
+- Le compagnon natif est maintenant dans `ios/PLPHealthKit/` ; il doit être signé dans Xcode et testé sur un iPhone réel avant de présenter la synchronisation comme active.
 - **Garmin Health API / Activity API** : conservées comme option future si le projet évolue vers un usage professionnel et obtient l'approbation Garmin.
 
 Le MVP personnel ne demandera jamais le mot de passe Garmin et ne reposera pas sur une API non officielle. L'import de fichiers sera explicite et contrôlé par l'utilisateur.

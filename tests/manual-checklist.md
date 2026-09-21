@@ -9,3 +9,6 @@
 7. Cliquer sur une plage de la grille et vérifier l’ajout d’une description.
 8. Vérifier l'inscription et la connexion ; après connexion, importer Garmin puis recharger la page.
 9. Valider `tests/fixtures/healthkit-daily-summary-v1.json` contre le contrat documenté avant d'intégrer le compagnon iPhone.
+10. Sur Mac, ouvrir `ios/PLPHealthKit/PLPHealthKit.xcodeproj`, sélectionner l'équipe Apple, signer l'entitlement HealthKit et installer sur un iPhone réel.
+11. Autoriser les cinq types Apple Santé, lancer une synchronisation manuelle puis vérifier une ligne `apple_health` par journée dans `health_daily_summaries`.
+12. Verrouiller l'iPhone, produire une nouvelle donnée compatible, puis vérifier qu'une livraison HealthKit en arrière-plan déclenche un rattrapage idempotent.

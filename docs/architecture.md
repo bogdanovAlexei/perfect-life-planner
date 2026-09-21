@@ -17,6 +17,7 @@ La version publiée est une application statique : `dist/index.html` ne contient
 - `supabase/migrations/` : structure de base de données versionnée.
 - `tests/fixtures/` : jeux de données non personnels pour les vérifications.
 - `docs/healthkit-sync-contract-v1.md` : contrat idempotent du futur compagnon iPhone.
+- `ios/PLPHealthKit/` : compagnon iOS natif signé localement dans Xcode, avec HealthKit et synchronisation Supabase.
 
 ## Ajouter une fonctionnalité
 
@@ -28,4 +29,4 @@ Lancer `node plp-preview.mjs`, puis ouvrir `http://127.0.0.1:4173`.
 
 Pour les cartes Garmin, le bouton **Tester la démo** charge des métriques fictives sans transmettre de données. Le fichier `tests/fixtures/garmin-health-sample.csv` permet aussi de tester l’import CSV.
 
-La synchronisation Apple Santé n’est pas simulée dans le navigateur : elle nécessitera une app iOS signée et les autorisations HealthKit. Le schéma quotidien préparatoire et sa fixture sont documentés séparément.
+La synchronisation Apple Santé n'est pas simulée dans le navigateur : elle nécessite l'app iOS signée, les autorisations HealthKit et un iPhone réel pour valider la livraison en arrière-plan. Le schéma quotidien et le compagnon natif sont documentés séparément.

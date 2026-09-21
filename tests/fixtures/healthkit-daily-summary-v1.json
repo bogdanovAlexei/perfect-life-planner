@@ -13,7 +13,7 @@
     "workout_count": 1
   },
   "provenance": {
-    "garmin_connect_shared_to_health": true,
+    "garmin_connect_shared_to_health": false,
     "completeness": "partial"
   }
 }

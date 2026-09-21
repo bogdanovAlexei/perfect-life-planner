@@ -13,12 +13,15 @@ create table if not exists public.health_daily_summaries (
   provenance jsonb not null default '{}'::jsonb check (jsonb_typeof(provenance) = 'object'),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
+  -- This is the idempotency boundary used by the iOS upsert and retry window.
   unique (user_id, source, source_record_key, observed_on)
 );
 
+-- Supports the web reader's "latest day" query without exposing another table.
 create index if not exists health_daily_summaries_user_date_idx
   on public.health_daily_summaries (user_id, observed_on desc);
 
+-- Health data is user-owned: authenticated clients can only access their own rows.
 alter table public.health_daily_summaries enable row level security;
 
 revoke all on table public.health_daily_summaries from anon;

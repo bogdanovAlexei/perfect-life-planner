@@ -1,0 +1,6 @@
+// Copy this file to PLPHealthKit.xcconfig and fill in your Apple Team ID.
+PLP_DEVELOPMENT_TEAM = REPLACE_WITH_APPLE_TEAM_ID
+PLP_BUNDLE_IDENTIFIER = com.perfectlifeplanner.healthkit
+
+SUPABASE_URL = https://YOUR_PROJECT_REF.supabase.co
+SUPABASE_PUBLISHABLE_KEY = sb_publishable_REPLACE_ME

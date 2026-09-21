@@ -1,0 +1,77 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		111111111111111111111101 /* PLPHealthKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222222222222222222222201 /* PLPHealthKitApp.swift */; };
+		111111111111111111111102 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222222222222222222222202 /* ContentView.swift */; };
+		111111111111111111111103 /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222222222222222222222203 /* AppConfiguration.swift */; };
+		111111111111111111111104 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222222222222222222222204 /* KeychainStore.swift */; };
+		111111111111111111111105 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222222222222222222222205 /* Models.swift */; };
+		111111111111111111111106 /* SupabaseRESTClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222222222222222222222206 /* SupabaseRESTClient.swift */; };
+		111111111111111111111107 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222222222222222222222207 /* HealthKitManager.swift */; };
+		111111111111111111111108 /* SyncCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222222222222222222222208 /* SyncCoordinator.swift */; };
+		111111111111111111111109 /* HealthSyncContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222222222222222222222214 /* HealthSyncContract.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		222222222222222222222201 /* PLPHealthKitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PLPHealthKitApp.swift; sourceTree = "<group>"; };
+		222222222222222222222202 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		222222222222222222222203 /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
+		222222222222222222222204 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		222222222222222222222205 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		222222222222222222222206 /* SupabaseRESTClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseRESTClient.swift; sourceTree = "<group>"; };
+		222222222222222222222207 /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
+		222222222222222222222208 /* SyncCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncCoordinator.swift; sourceTree = "<group>"; };
+		222222222222222222222209 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		222222222222222222222210 /* PLPHealthKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PLPHealthKit.entitlements; sourceTree = "<group>"; };
+		222222222222222222222211 /* PLPHealthKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PLPHealthKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		222222222222222222222212 /* PLPHealthKit.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = PLPHealthKit.xcconfig; sourceTree = "<group>"; };
+		222222222222222222222213 /* PLPHealthKit.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = PLPHealthKit.xcconfig.example; sourceTree = "<group>"; };
+		222222222222222222222214 /* HealthSyncContract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSyncContract.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		555555555555555555555501 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		333333333333333333333301 = {isa = PBXGroup; children = (333333333333333333333302, 333333333333333333333303, 333333333333333333333304,); sourceTree = "<group>"; };
+		333333333333333333333302 /* PLPHealthKit */ = {isa = PBXGroup; children = (222222222222222222222201, 222222222222222222222202, 222222222222222222222203, 222222222222222222222204, 222222222222222222222205, 222222222222222222222206, 222222222222222222222207, 222222222222222222222208, 222222222222222222222214, 222222222222222222222209, 222222222222222222222210,); path = PLPHealthKit; sourceTree = "<group>"; };
+		333333333333333333333303 /* Config */ = {isa = PBXGroup; children = (222222222222222222222212, 222222222222222222222213,); path = Config; sourceTree = "<group>"; };
+		333333333333333333333304 /* Products */ = {isa = PBXGroup; children = (222222222222222222222211,); name = Products; sourceTree = "<group>"; };
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		444444444444444444444401 /* PLPHealthKit */ = {isa = PBXNativeTarget; buildConfigurationList = 666666666666666666666602 /* Build configuration list for PBXNativeTarget "PLPHealthKit" */; buildPhases = (555555555555555555555502, 555555555555555555555501, 555555555555555555555503,); buildRules = (); dependencies = (); name = PLPHealthKit; productName = PLPHealthKit; productReference = 222222222222222222222211 /* PLPHealthKit.app */; productType = "com.apple.product-type.application"; };
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		444444444444444444444402 /* Project object */ = {isa = PBXProject; attributes = {LastUpgradeCheck = 1600; TargetAttributes = {444444444444444444444401 = {CreatedOnToolsVersion = 16.0; }; }; }; buildConfigurationList = 666666666666666666666601 /* Build configuration list for PBXProject "PLPHealthKit" */; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, fr,); mainGroup = 333333333333333333333301; productRefGroup = 333333333333333333333304 /* Products */; projectDirPath = ""; projectRoot = ""; targets = (444444444444444444444401,); };
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		555555555555555555555503 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		555555555555555555555502 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (111111111111111111111101, 111111111111111111111102, 111111111111111111111103, 111111111111111111111104, 111111111111111111111105, 111111111111111111111106, 111111111111111111111107, 111111111111111111111108, 111111111111111111111109,); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		666666666666666666666603 /* Debug */ = {isa = XCBuildConfiguration; baseConfigurationReference = 222222222222222222222212 /* PLPHealthKit.xcconfig */; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CODE_SIGN_ENTITLEMENTS = PLPHealthKit/PLPHealthKit.entitlements; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; DEVELOPMENT_TEAM = $(PLP_DEVELOPMENT_TEAM); GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = PLPHealthKit/Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 17.0; LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks"; PRODUCT_BUNDLE_IDENTIFIER = $(PLP_BUNDLE_IDENTIFIER); PRODUCT_NAME = "$(TARGET_NAME)"; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; }; name = Debug; };
+		666666666666666666666604 /* Release */ = {isa = XCBuildConfiguration; baseConfigurationReference = 222222222222222222222212 /* PLPHealthKit.xcconfig */; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CODE_SIGN_ENTITLEMENTS = PLPHealthKit/PLPHealthKit.entitlements; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; DEVELOPMENT_TEAM = $(PLP_DEVELOPMENT_TEAM); GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = PLPHealthKit/Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 17.0; LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks"; PRODUCT_BUNDLE_IDENTIFIER = $(PLP_BUNDLE_IDENTIFIER); PRODUCT_NAME = "$(TARGET_NAME)"; SWIFT_OPTIMIZATION_LEVEL = "-O"; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; }; name = Release; };
+		666666666666666666666605 /* Project Debug */ = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; SWIFT_VERSION = 5.0; }; name = Debug; };
+		666666666666666666666606 /* Project Release */ = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; SWIFT_VERSION = 5.0; }; name = Release; };
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		666666666666666666666601 /* Build configuration list for PBXProject "PLPHealthKit" */ = {isa = XCConfigurationList; buildConfigurations = (666666666666666666666605, 666666666666666666666606,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		666666666666666666666602 /* Build configuration list for PBXNativeTarget "PLPHealthKit" */ = {isa = XCConfigurationList; buildConfigurations = (666666666666666666666603, 666666666666666666666604,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+/* End XCConfigurationList section */
+	};
+	rootObject = 444444444444444444444402 /* Project object */;
+}
