@@ -7,4 +7,5 @@
 5. Importer `tests/fixtures/garmin-health-sample.csv` : les mêmes cartes doivent être mises à jour.
 6. Ajouter une plage, la rendre fixe ou flexible, puis vérifier son rendu dans la grille 24 heures.
 7. Cliquer sur une plage de la grille et vérifier l’ajout d’une description.
-8. Vérifier l’inscription et la connexion ; après connexion, importer Garmin puis recharger la page.
+8. Vérifier l'inscription et la connexion ; après connexion, importer Garmin puis recharger la page.
+9. Valider `tests/fixtures/healthkit-daily-summary-v1.json` contre le contrat documenté avant d'intégrer le compagnon iPhone.

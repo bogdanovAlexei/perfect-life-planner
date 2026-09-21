@@ -16,6 +16,7 @@ La version publiée est une application statique : `dist/index.html` ne contient
 - `dist/js/features/auth.js` : inscription, connexion et session Supabase.
 - `supabase/migrations/` : structure de base de données versionnée.
 - `tests/fixtures/` : jeux de données non personnels pour les vérifications.
+- `docs/healthkit-sync-contract-v1.md` : contrat idempotent du futur compagnon iPhone.
 
 ## Ajouter une fonctionnalité
 
@@ -26,3 +27,5 @@ Créer un fichier dans `dist/js/features/` pour chaque domaine métier, puis l�
 Lancer `node plp-preview.mjs`, puis ouvrir `http://127.0.0.1:4173`.
 
 Pour les cartes Garmin, le bouton **Tester la démo** charge des métriques fictives sans transmettre de données. Le fichier `tests/fixtures/garmin-health-sample.csv` permet aussi de tester l’import CSV.
+
+La synchronisation Apple Santé n’est pas simulée dans le navigateur : elle nécessitera une app iOS signée et les autorisations HealthKit. Le schéma quotidien préparatoire et sa fixture sont documentés séparément.

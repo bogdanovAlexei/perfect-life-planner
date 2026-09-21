@@ -1,0 +1,19 @@
+{
+  "observed_on": "2026-09-21",
+  "source": "apple_health",
+  "source_record_key": "apple_health_daily:v1",
+  "timezone": "Europe/Paris",
+  "captured_at": "2026-09-21T20:15:00Z",
+  "metrics_version": 1,
+  "metrics": {
+    "steps": 7421,
+    "sleep_minutes": 418,
+    "active_calories_kcal": 511,
+    "resting_heart_rate_bpm": 52,
+    "workout_count": 1
+  },
+  "provenance": {
+    "garmin_connect_shared_to_health": true,
+    "completeness": "partial"
+  }
+}
