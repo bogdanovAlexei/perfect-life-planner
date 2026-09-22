@@ -10,6 +10,12 @@
   padding-bottom: max(28px, env(safe-area-inset-bottom));
 }
 
+/* The fixed sidebar no longer occupies the first grid cell in normal flow. */
+.app > .content {
+  grid-column: 2;
+  min-width: 0;
+}
+
 .sidebar-footer {
   width: 100%;
 }
@@ -33,6 +39,10 @@
 }
 
 @media (max-width: 760px) {
+  .app > .content {
+    grid-column: auto;
+  }
+
   .sidebar {
     position: static;
     width: auto;

@@ -11,7 +11,9 @@ assert.match(html, /id="accountNav"[^>]*data-page-target="account"/);
 assert.match(html, /id="mobileAccountNav"[^>]*data-page-target="account"/);
 assert.equal(Array.from(html.matchAll(/data-page-target=/g)).length, 4, 'les navigations bureau et mobile ont des actions jumelées');
 assert.match(navigationStyles, /\.sidebar\s*\{[^}]*position:\s*fixed/s);
+assert.match(navigationStyles, /\.app\s*>\s*\.content\s*\{\s*grid-column:\s*2;\s*min-width:\s*0;/);
 assert.match(navigationStyles, /@media\s*\(max-width:\s*760px\)/);
+assert.match(navigationStyles, /@media\s*\(max-width:\s*760px\)[\s\S]*?\.app\s*>\s*\.content\s*\{\s*grid-column:\s*auto;/);
 
 class Element {
   constructor(name, pageTarget = '') {
