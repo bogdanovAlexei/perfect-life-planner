@@ -150,6 +150,8 @@
       setMessage('Votre planning personnel est prêt. Il sera enregistré automatiquement dans ce compte.', 'success');
     }
 
+    badge.textContent = result.data ? 'Synchronisé' : 'Prêt';
+    badge.dataset.state = 'connected';
     activeScheduleUserId = userId;
     scheduleReady = true;
     if (unsubscribePlanner) unsubscribePlanner();
