@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="css/week-navigation.css" />
         <link rel="stylesheet" href="css/planner-calendar.css" />
         <link rel="stylesheet" href="css/account.css" />
+        <link rel="stylesheet" href="css/sidebar-navigation.css" />
   </head>
   <body class="account-loading">
     <div class="app">
@@ -20,7 +21,7 @@
         <div class="brand"><span class="brand-mark">P</span> Perfect Life Planner <span style="font-size:.68rem;color:#8792ad;letter-spacing:.06em">PLP</span></div>
         <nav class="nav-group" aria-label="Navigation principale">
           <div class="nav-label">Organiser</div>
-          <button class="nav-item active"><span class="nav-icon">▦</span> Mon planning</button>
+          <button class="nav-item active" id="plannerNav" type="button" data-page-target="planner" aria-current="page" aria-controls="plannerPage"><span class="nav-icon" aria-hidden="true">▦</span> Mon planning</button>
           <button class="nav-item"><span class="nav-icon">◎</span> Mes objectifs</button>
           <button class="nav-item"><span class="nav-icon">✦</span> Habitudes</button>
         </nav>
@@ -29,12 +30,19 @@
           <button class="nav-item"><span class="nav-icon">◔</span> Mon équilibre</button>
           <button class="nav-item"><span class="nav-icon">☼</span> Mon énergie</button>
         </nav>
-        <div class="sidebar-footer"><span class="avatar">P</span><span>Votre espace PLP<br><small style="color:#8792ad">Planning personnel</small></span></div>
+        <nav class="sidebar-footer" aria-label="Espace personnel">
+          <button class="nav-item account-nav-item" id="accountNav" type="button" data-page-target="account" aria-current="false" aria-controls="accountPage"><span class="nav-icon" aria-hidden="true">◎</span><span>Mon espace personnel</span></button>
+        </nav>
+        <nav class="mobile-page-nav" aria-label="Pages PLP">
+          <button class="nav-item active" id="mobilePlannerNav" type="button" data-page-target="planner" aria-current="page" aria-controls="plannerPage"><span class="nav-icon" aria-hidden="true">▦</span><span>Mon planning</span></button>
+          <button class="nav-item account-nav-item" id="mobileAccountNav" type="button" data-page-target="account" aria-current="false" aria-controls="accountPage"><span class="nav-icon" aria-hidden="true">◎</span><span>Mon espace personnel</span></button>
+        </nav>
       </aside>
       <main class="content">
+        <section class="app-page account-page" id="accountPage" aria-label="Mon espace personnel" hidden>
         <section class="personal-space card" id="personalAccount" aria-labelledby="personalAccountTitle">
           <div class="personal-space-heading">
-            <div><p class="eyebrow">Votre espace privé</p><h2 id="personalAccountTitle">Mon espace personnel</h2><p id="accountIntro">Connectez-vous pour retrouver votre emploi du temps et vos informations sur vos appareils.</p></div>
+            <div><p class="eyebrow">Votre espace privé</p><h2 id="personalAccountTitle" tabindex="-1">Mon espace personnel</h2><p id="accountIntro">Connectez-vous pour retrouver votre emploi du temps et vos informations sur vos appareils.</p></div>
             <span class="account-status-badge" id="accountBadge" role="status">Hors connexion</span>
           </div>
           <div class="account-panel" id="signedOutPanel">
@@ -58,8 +66,10 @@
           <div class="schedule-transfer" id="scheduleTransfer" hidden><p id="transferMessage">Un planning enregistré sur cet appareil est disponible.</p><div><button class="secondary" id="importLocalSchedule" type="button">Importer dans ce compte</button><button class="secondary" id="discardLocalSchedule" type="button">Ne pas importer</button></div></div>
           <p class="account-message" id="accountMessage" role="status" aria-live="polite">Les plannings sont privés à chaque compte.</p>
         </section>
+        </section>
+        <div class="app-page planner-page" id="plannerPage">
         <header class="topbar">
-          <div><p class="eyebrow">Semaine en cours</p><h1>Construisons votre semaine</h1></div>
+          <div><p class="eyebrow">Semaine en cours</p><h1 tabindex="-1">Construisons votre semaine</h1></div>
           <div class="topbar-actions"><button class="primary" id="optimize">Optimiser ma semaine</button></div>
         </header>
         <section class="health-panel" aria-label="Santé Garmin">
@@ -97,6 +107,7 @@
             <article class="card right-card zimbra-card"><div class="zimbra-title"><span class="zimbra-badge">U</span><h2>Emploi du temps étudiant</h2></div><p>Consultez vos cours dans Zimbra Unicaen, puis préparez leur import sécurisé dans PLP.</p><button class="secondary" id="connectZimbra">Ouvrir Zimbra Unicaen</button><small class="integration-note">Prochaine étape : import du calendrier par flux ICS / CalDAV</small></article>
           </aside>
         </section>
+        </div>
       </main>
     </div><dialog id="eventDialog" class="auth-dialog"><form class="auth-card event-editor-card" method="dialog" onsubmit="return false"><div class="auth-head"><div><p class="eyebrow">Plage du planning</p><h2>Modifier la plage</h2></div><button class="icon-button" id="closeEvent" type="button" aria-label="Fermer">×</button></div><p id="editEventWhen" class="event-editor-meta"></p><label>Nom<input id="editEventName" type="text" maxlength="120" /></label><label>Description<textarea id="editEventDescription" maxlength="2000" placeholder="Ajouter une note, un lieu ou une consigne…"></textarea></label><label class="important-field"><input id="editImportant" type="checkbox" /> Important <small>Compte dans les créneaux protégés.</small></label><button class="tag-button" id="editFlexToggle" type="button">Plage flexible</button><div class="event-editor-actions"><button class="danger-button" id="deleteEdited" type="button">Supprimer</button><button class="primary" id="saveEdited" type="button">Enregistrer</button></div></form></dialog><div class="toast" role="status" id="toast">Votre planning a été mis à jour.</div>
     <script src="js/config.js" defer></script>
@@ -110,6 +121,7 @@
     <script src="js/features/garmin-parsers.js" defer></script>
     <script src="js/features/health-sync.js" defer></script>
     <script src="js/features/health.js" defer></script>
+    <script src="js/features/page-navigation.js" defer></script>
     <script src="js/features/account.js" defer></script>
   </body>
 </html>
