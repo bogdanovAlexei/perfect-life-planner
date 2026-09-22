@@ -29,13 +29,15 @@
           <div class="nav-label">Analyser</div>
           <button class="nav-item"><span class="nav-icon">◔</span> Mon équilibre</button>
           <button class="nav-item"><span class="nav-icon">☼</span> Mon énergie</button>
+          <button class="nav-item" id="healthNav" type="button" data-page-target="health" aria-current="false" aria-controls="healthPage"><span class="nav-icon" aria-hidden="true">♥</span> Espace santé</button>
         </nav>
         <nav class="sidebar-footer" aria-label="Espace personnel">
           <button class="nav-item account-nav-item" id="accountNav" type="button" data-page-target="account" aria-current="false" aria-controls="accountPage"><span class="nav-icon" aria-hidden="true">◎</span><span>Mon espace personnel</span></button>
         </nav>
         <nav class="mobile-page-nav" aria-label="Pages PLP">
           <button class="nav-item active" id="mobilePlannerNav" type="button" data-page-target="planner" aria-current="page" aria-controls="plannerPage"><span class="nav-icon" aria-hidden="true">▦</span><span>Mon planning</span></button>
-          <button class="nav-item account-nav-item" id="mobileAccountNav" type="button" data-page-target="account" aria-current="false" aria-controls="accountPage"><span class="nav-icon" aria-hidden="true">◎</span><span>Mon espace personnel</span></button>
+          <button class="nav-item" id="mobileHealthNav" type="button" data-page-target="health" aria-current="false" aria-controls="healthPage"><span class="nav-icon" aria-hidden="true">♥</span><span>Santé</span></button>
+          <button class="nav-item account-nav-item" id="mobileAccountNav" type="button" data-page-target="account" aria-current="false" aria-controls="accountPage"><span class="nav-icon" aria-hidden="true">◎</span><span>Espace perso</span></button>
         </nav>
       </aside>
       <main class="content">
@@ -67,25 +69,30 @@
           <p class="account-message" id="accountMessage" role="status" aria-live="polite">Les plannings sont privés à chaque compte.</p>
         </section>
         </section>
+        <section class="app-page health-page" id="healthPage" aria-labelledby="healthPageTitle" hidden>
+          <header class="topbar health-page-heading">
+            <div><p class="eyebrow">Santé · Garmin</p><h1 id="healthPageTitle" tabindex="-1">Mon espace santé</h1></div>
+          </header>
+          <section class="health-panel" aria-label="Santé Garmin">
+            <div class="card health-toolbar">
+              <div><h2>Ma santé</h2><p>Importez un export Garmin. Le fichier est analysé sur cet appareil et seules les métriques utiles sont conservées.</p><p class="health-automation-note">Compagnon iPhone Apple Santé : les agrégats autorisés remontent automatiquement après installation et première autorisation. L’import FIT reste disponible pour les données complètes.</p></div>
+              <div class="health-actions"><label class="primary health-import" for="garminFile">Importer Garmin</label><input class="health-file" id="garminFile" type="file" accept=".fit,.csv,.json,.zip,application/zip,text/csv,application/json" /><button class="secondary health-demo" id="healthDemo" type="button">Tester la démo</button><button class="secondary health-reset" id="healthReset" type="button" hidden>Effacer</button><small class="health-status" id="healthStatus" role="status">Formats acceptés : FIT, CSV, JSON et ZIP.</small></div>
+            </div>
+            <div class="insights">
+              <article class="card health-card steps-card"><div class="ring" id="stepsRing"><span id="stepsPercent">—</span></div><div><p class="metric-title">Pas aujourd’hui</p><p class="metric-value" id="stepsValue">—</p><p class="metric-note" id="stepsNote">Objectif non importé</p></div></article>
+              <article class="card health-card sleep-card"><div class="health-icon">☾</div><p class="metric-title">Sommeil</p><p class="metric-value" id="sleepValue">—</p><p class="metric-note" id="sleepNote">Durée non importée</p></article>
+              <article class="card health-card calorie-card"><div class="health-icon">◒</div><p class="metric-title">Calories actives</p><p class="metric-value" id="caloriesValue">—</p><p class="metric-note" id="caloriesNote">Total non importé</p></article>
+              <article class="card health-card heart-card"><div class="health-icon">♥</div><p class="metric-title">Rythme au repos</p><p class="metric-value" id="heartValue">—</p><p class="metric-note" id="heartNote">Moyenne non importée</p></article>
+              <article class="card health-card stress-card"><div class="health-icon">≈</div><p class="metric-title">Stress · VFC</p><p class="metric-value" id="stressValue">—</p><p class="metric-note" id="hrvNote">VFC non importée</p></article>
+            </div>
+            <div class="health-meta"><span class="health-activity" id="healthActivity">Aucune activité importée</span><span class="health-privacy" id="healthPrivacy">Données locales tant que vous n’êtes pas connecté.</span></div>
+          </section>
+        </section>
         <div class="app-page planner-page" id="plannerPage">
         <header class="topbar">
           <div><p class="eyebrow">Semaine en cours</p><h1 tabindex="-1">Construisons votre semaine</h1></div>
           <div class="topbar-actions"><button class="primary" id="optimize">Optimiser ma semaine</button></div>
         </header>
-        <section class="health-panel" aria-label="Santé Garmin">
-          <div class="card health-toolbar">
-            <div><h2>Ma santé</h2><p>Importez un export Garmin. Le fichier est analysé sur cet appareil et seules les métriques utiles sont conservées.</p><p class="health-automation-note">Compagnon iPhone Apple Santé : les agrégats autorisés remontent automatiquement après installation et première autorisation. L’import FIT reste disponible pour les données complètes.</p></div>
-            <div class="health-actions"><label class="primary health-import" for="garminFile">Importer Garmin</label><input class="health-file" id="garminFile" type="file" accept=".fit,.csv,.json,.zip,application/zip,text/csv,application/json" /><button class="secondary health-demo" id="healthDemo" type="button">Tester la démo</button><button class="secondary health-reset" id="healthReset" type="button" hidden>Effacer</button><small class="health-status" id="healthStatus" role="status">Formats acceptés : FIT, CSV, JSON et ZIP.</small></div>
-          </div>
-          <div class="insights">
-            <article class="card health-card steps-card"><div class="ring" id="stepsRing"><span id="stepsPercent">—</span></div><div><p class="metric-title">Pas aujourd’hui</p><p class="metric-value" id="stepsValue">—</p><p class="metric-note" id="stepsNote">Objectif non importé</p></div></article>
-            <article class="card health-card sleep-card"><div class="health-icon">☾</div><p class="metric-title">Sommeil</p><p class="metric-value" id="sleepValue">—</p><p class="metric-note" id="sleepNote">Durée non importée</p></article>
-            <article class="card health-card calorie-card"><div class="health-icon">◒</div><p class="metric-title">Calories actives</p><p class="metric-value" id="caloriesValue">—</p><p class="metric-note" id="caloriesNote">Total non importé</p></article>
-            <article class="card health-card heart-card"><div class="health-icon">♥</div><p class="metric-title">Rythme au repos</p><p class="metric-value" id="heartValue">—</p><p class="metric-note" id="heartNote">Moyenne non importée</p></article>
-            <article class="card health-card stress-card"><div class="health-icon">≈</div><p class="metric-title">Stress · VFC</p><p class="metric-value" id="stressValue">—</p><p class="metric-note" id="hrvNote">VFC non importée</p></article>
-          </div>
-          <div class="health-meta"><span class="health-activity" id="healthActivity">Aucune activité importée</span><span class="health-privacy" id="healthPrivacy">Données locales tant que vous n’êtes pas connecté.</span></div>
-        </section>
         <section class="workspace">
           <article class="card calendar-card"><div class="calendar-head"><h2>Mon planning</h2><div class="legend"><span><i style="background:#8bdbaa"></i>Personnel</span><span><i style="background:#b9a6ff"></i>Travail</span><span><i style="background:#f2b29d"></i>Énergie</span></div></div><nav class="planner-navigation" aria-label="Navigation des semaines"><button class="icon-button" id="previousWeek" aria-label="Semaine précédente">‹</button><span class="planner-week-range" id="weekRange" aria-live="polite">Semaine en cours</span><button class="icon-button" id="nextWeek" aria-label="Semaine suivante">›</button><button class="view-all" id="viewAll" type="button" aria-pressed="false">Voir la journée</button></nav>
             <div class="grid" aria-label="Planning de la semaine">
