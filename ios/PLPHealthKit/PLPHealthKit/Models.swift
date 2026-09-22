@@ -81,19 +81,3 @@ struct AuthUser: Decodable, Sendable {
     let id: String
     let email: String?
 }
-
-struct SupabaseErrorResponse: Decodable {
-    let message: String?
-    let errorDescription: String?
-    let msg: String?
-
-    enum CodingKeys: String, CodingKey {
-        case message
-        case errorDescription = "error_description"
-        case msg
-    }
-
-    var bestMessage: String {
-        message ?? errorDescription ?? msg ?? "Erreur Supabase inconnue."
-    }
-}

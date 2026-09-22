@@ -1,22 +1,148 @@
-let authMode='login'; let supabaseClient; let supabaseLoader; let authSession=null;
-      const authDialog=document.getElementById('authDialog'); const authButton=document.getElementById('accountButton'); const authTitle=document.getElementById('authTitle'); const authCopy=document.getElementById('authCopy'); const authSubmit=document.getElementById('authSubmit'); const authToggle=document.getElementById('authToggle'); const authState=document.getElementById('authState');
-      function paintAuthMode(){const signup=authMode==='signup';authTitle.textContent=signup?'Créer mon compte':'Se connecter';authCopy.textContent=signup?'Enregistrez votre planning et retrouvez-le sur votre iPhone.':'Retrouvez votre planning sur tous vos appareils.';authSubmit.textContent=signup?'Créer mon compte':'Se connecter';authToggle.textContent=signup?'J’ai déjà un compte':'Créer un compte';authToggle.hidden=false;document.getElementById('authPassword').autocomplete=signup?'new-password':'current-password';}
-      function paintSession(session){authSession=session||null;const signedIn=Boolean(authSession?.user);authButton.textContent=signedIn?'Mon compte':'Se connecter';authButton.setAttribute('aria-label',signedIn?'Ouvrir mon compte':'Se connecter');void syncHealthWithSession(authSession);}
-      function loadSupabase(){
-        const url=window.PLP_SUPABASE_URL; const key=window.PLP_SUPABASE_ANON_KEY;
-        if(!url||!key)return Promise.reject(new Error('SUPABASE_CONFIG_MISSING'));
-        if(window.supabase?.createClient)return Promise.resolve(window.supabase.createClient(url,key));
-        if(supabaseLoader)return supabaseLoader;
-        supabaseLoader=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';script.onload=()=>window.supabase?.createClient?resolve(window.supabase.createClient(url,key)):reject(new Error('Supabase client indisponible'));script.onerror=()=>reject(new Error('Supabase client indisponible'));document.head.appendChild(script)});return supabaseLoader;
+(function () {
+  let authMode = 'login';
+  let supabaseClient;
+  let authSession = null;
+
+  const dialog = document.getElementById('authDialog');
+  const accountButton = document.getElementById('accountButton');
+  const title = document.getElementById('authTitle');
+  const copy = document.getElementById('authCopy');
+  const submitButton = document.getElementById('authSubmit');
+  const toggleButton = document.getElementById('authToggle');
+  const stateMessage = document.getElementById('authState');
+  const emailInput = document.getElementById('authEmail');
+  const passwordInput = document.getElementById('authPassword');
+
+  function paintAuthMode() {
+    const signup = authMode === 'signup';
+    title.textContent = signup ? 'Créer mon compte' : 'Se connecter';
+    copy.textContent = signup ? 'Enregistrez votre planning et retrouvez-le sur votre iPhone.' : 'Retrouvez votre planning sur tous vos appareils.';
+    submitButton.textContent = signup ? 'Créer mon compte' : 'Se connecter';
+    submitButton.dataset.action = 'auth';
+    toggleButton.textContent = signup ? 'J’ai déjà un compte' : 'Créer un compte';
+    toggleButton.hidden = false;
+    passwordInput.autocomplete = signup ? 'new-password' : 'current-password';
+  }
+
+  function clearSensitiveFields() {
+    passwordInput.value = '';
+  }
+
+  function paintSession(session) {
+    authSession = session || null;
+    const signedIn = Boolean(authSession?.user);
+    accountButton.textContent = signedIn ? 'Mon compte' : 'Se connecter';
+    accountButton.setAttribute('aria-label', signedIn ? 'Ouvrir mon compte' : 'Se connecter');
+    void syncHealthWithSession(authSession);
+  }
+
+  async function loadSupabase() {
+    if (supabaseClient) return supabaseClient;
+    const url = window.PLP_SUPABASE_URL;
+    const key = window.PLP_SUPABASE_PUBLISHABLE_KEY;
+    if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(url || '') || !String(key || '').startsWith('sb_publishable_')) {
+      throw new Error('SUPABASE_CONFIG_MISSING');
+    }
+    const sdk = await window.PLPSecurity.loadScript('supabase');
+    supabaseClient = sdk.createClient(url, key, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
+    });
+    return supabaseClient;
+  }
+
+  accountButton.addEventListener('click', () => {
+    clearSensitiveFields();
+    if (authSession?.user) {
+      title.textContent = 'Compte connecté';
+      copy.textContent = authSession.user.email || 'Votre espace PLP';
+      submitButton.textContent = 'Se déconnecter';
+      submitButton.dataset.action = 'signout';
+      toggleButton.hidden = true;
+      stateMessage.textContent = 'Votre session Supabase est active.';
+    } else {
+      authMode = 'login';
+      paintAuthMode();
+      stateMessage.textContent = 'Connexion sécurisée via Supabase.';
+    }
+    dialog.showModal();
+  });
+
+  document.getElementById('closeAuth').addEventListener('click', () => {
+    clearSensitiveFields();
+    dialog.close();
+  });
+
+  toggleButton.addEventListener('click', () => {
+    authMode = authMode === 'login' ? 'signup' : 'login';
+    clearSensitiveFields();
+    paintAuthMode();
+  });
+
+  submitButton.addEventListener('click', async () => {
+    if (submitButton.dataset.action === 'signout') {
+      submitButton.disabled = true;
+      try {
+        const client = await loadSupabase();
+        const { error } = await client.auth.signOut({ scope: 'global' });
+        if (error) throw error;
+        paintSession(null);
+        clearSensitiveFields();
+        dialog.close();
+        notice('Vous êtes déconnecté de PLP.');
+      } catch {
+        stateMessage.textContent = 'La déconnexion distante a échoué. Réessayez dans quelques instants.';
+      } finally {
+        submitButton.disabled = false;
       }
-      authButton.addEventListener('click',()=>{if(authSession?.user){authTitle.textContent='Compte connecté';authCopy.textContent=authSession.user.email||'Votre espace PLP';authSubmit.textContent='Se déconnecter';authSubmit.dataset.action='signout';authToggle.hidden=true;authState.textContent='Votre session Supabase est active.';}else{authMode='login';authSubmit.dataset.action='auth';paintAuthMode();authState.textContent='Connexion sécurisée via Supabase.';}authDialog.showModal();});
-      document.getElementById('closeAuth').addEventListener('click',()=>authDialog.close());
-      authToggle.addEventListener('click',()=>{authMode=authMode==='login'?'signup':'login';paintAuthMode();});
-      authSubmit.addEventListener('click',async()=>{
-        if(authSubmit.dataset.action==='signout'){authSubmit.disabled=true;try{if(supabaseClient)await supabaseClient.auth.signOut();paintSession(null);authDialog.close();notice('Vous êtes déconnecté de PLP.');}finally{authSubmit.disabled=false;authSubmit.dataset.action='auth';}return;}
-        const email=document.getElementById('authEmail').value.trim(); const password=document.getElementById('authPassword').value;
-        if(!email||password.length<8){authState.textContent='Saisissez un email et un mot de passe d’au moins 8 caractères.';return;}
-        authSubmit.disabled=true;authState.textContent='Connexion en cours…';
-        try{const modeBeforeSubmit=authMode;supabaseClient=supabaseClient||await loadSupabase();const result=modeBeforeSubmit==='signup'?await supabaseClient.auth.signUp({email,password}):await supabaseClient.auth.signInWithPassword({email,password});if(result.error)throw result.error;paintSession(result.data?.session||null);if(modeBeforeSubmit==='signup'&&!result.data?.session){authMode='login';paintAuthMode();authState.textContent='Compte créé. Vérifiez votre email puis connectez-vous.';notice('Votre compte PLP est créé.');}else{authState.textContent='Connexion réussie.';notice('Vous êtes connecté à PLP.');setTimeout(()=>authDialog.close(),900);}}catch(error){authState.textContent=error.message==='SUPABASE_CONFIG_MISSING'?'Supabase n’est pas encore configuré pour ce site. Ajoutez l’URL du projet et la clé publique anon.':`Impossible de continuer : ${error.message||'erreur inconnue'}`;}finally{authSubmit.disabled=false;}
-      });
-      (async()=>{try{const client=await loadSupabase();supabaseClient=client;const current=await client.auth.getSession();paintSession(current.data?.session||null);client.auth.onAuthStateChange((_event,session)=>paintSession(session));}catch(error){paintSession(null);}})();
+      return;
+    }
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    if (!emailInput.validity.valid || password.length < 8 || password.length > 128) {
+      stateMessage.textContent = 'Saisissez un email valide et un mot de passe de 8 à 128 caractères.';
+      return;
+    }
+
+    submitButton.disabled = true;
+    stateMessage.textContent = 'Connexion en cours…';
+    try {
+      const modeBeforeSubmit = authMode;
+      const client = await loadSupabase();
+      const result = modeBeforeSubmit === 'signup'
+        ? await client.auth.signUp({ email, password })
+        : await client.auth.signInWithPassword({ email, password });
+      if (result.error) throw result.error;
+      clearSensitiveFields();
+      paintSession(result.data?.session || null);
+
+      if (modeBeforeSubmit === 'signup' && !result.data?.session) {
+        authMode = 'login';
+        paintAuthMode();
+        stateMessage.textContent = 'Compte créé. Vérifiez votre email puis connectez-vous.';
+        notice('Votre compte PLP est créé.');
+      } else {
+        stateMessage.textContent = 'Connexion réussie.';
+        notice('Vous êtes connecté à PLP.');
+        setTimeout(() => dialog.close(), 900);
+      }
+    } catch (error) {
+      stateMessage.textContent = error?.message === 'SUPABASE_CONFIG_MISSING'
+        ? 'La connexion sécurisée n’est pas encore configurée.'
+        : window.PLPSecurity.authMessage(error);
+    } finally {
+      submitButton.disabled = false;
+    }
+  });
+
+  (async () => {
+    try {
+      const client = await loadSupabase();
+      const current = await client.auth.getSession();
+      paintSession(current.data?.session || null);
+      client.auth.onAuthStateChange((_event, session) => paintSession(session));
+    } catch {
+      paintSession(null);
+    }
+  })();
+}());

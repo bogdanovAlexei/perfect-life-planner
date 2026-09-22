@@ -9,6 +9,11 @@ struct AppConfiguration {
             let urlString = bundle.object(forInfoDictionaryKey: "SUPABASE_URL") as? String,
             let url = URL(string: urlString),
             url.scheme == "https",
+            url.user == nil,
+            url.password == nil,
+            url.query == nil,
+            url.fragment == nil,
+            url.host?.hasSuffix(".supabase.co") == true,
             !urlString.contains("YOUR_PROJECT_REF")
         else {
             throw ConfigurationError.missing("SUPABASE_URL")
@@ -16,7 +21,7 @@ struct AppConfiguration {
 
         guard
             let key = bundle.object(forInfoDictionaryKey: "SUPABASE_PUBLISHABLE_KEY") as? String,
-            !key.isEmpty,
+            key.hasPrefix("sb_publishable_"),
             !key.contains("REPLACE_ME")
         else {
             throw ConfigurationError.missing("SUPABASE_PUBLISHABLE_KEY")

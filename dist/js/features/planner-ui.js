@@ -58,15 +58,22 @@
       notice('Vérifiez les heures de début et de fin.');
       return;
     }
-    planner.addEvent({
-      name,
-      start,
-      end,
-      day: document.getElementById('eventDay').value,
-      flex: document.getElementById('eventFlex').value,
-      type: document.getElementById('eventType').value,
-      source: 'manual',
-    });
+    try {
+      planner.addEvent({
+        name,
+        start,
+        end,
+        day: document.getElementById('eventDay').value,
+        flex: document.getElementById('eventFlex').value,
+        type: document.getElementById('eventType').value,
+        source: 'manual',
+      });
+    } catch (error) {
+      notice(error?.message === 'EVENT_LIMIT_REACHED'
+        ? 'La limite de 500 plages est atteinte. Supprimez-en avant de continuer.'
+        : 'Cette plage n’a pas pu être ajoutée. Vérifiez ses informations.');
+      return;
+    }
     nameInput.value = '';
     notice(`« ${name} » a été ajouté à votre planning.`);
   });
@@ -81,19 +88,10 @@
   const photoState = document.getElementById('photoState');
   const progress = document.getElementById('ocrProgress');
   const progressBar = document.getElementById('ocrProgressBar');
-  let ocrLoader;
+  let previewUrl;
 
   function loadOcr() {
-    if (window.Tesseract) return Promise.resolve(window.Tesseract);
-    if (ocrLoader) return ocrLoader;
-    ocrLoader = new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
-      script.onload = () => resolve(window.Tesseract);
-      script.onerror = () => reject(new Error('OCR indisponible'));
-      document.head.appendChild(script);
-    });
-    return ocrLoader;
+    return window.PLPSecurity.loadScript('tesseract');
   }
 
   async function recognizeSchedule(file, onProgress) {
@@ -131,7 +129,21 @@
   }
 
   async function importPhoto(file) {
-    preview.src = URL.createObjectURL(file);
+    try {
+      window.PLPSecurity.validateFile(file, {
+        maxBytes: window.PLPSecurity.limits.scheduleImageBytes,
+        mimePrefixes: ['image/'],
+        sizeMessage: 'Cette image est trop volumineuse (12 Mo maximum).',
+        typeMessage: 'Choisissez un véritable fichier image.',
+      });
+    } catch (error) {
+      photoState.textContent = error.message;
+      notice('Image refusée pour protéger l’application.');
+      return;
+    }
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    previewUrl = URL.createObjectURL(file);
+    preview.src = previewUrl;
     preview.style.display = 'block';
     progress.style.display = 'block';
     progressBar.style.width = '4%';
@@ -154,9 +166,12 @@
       progressBar.style.width = '100%';
       photoState.textContent = `${importedCount} créneau${importedCount > 1 ? 'x' : ''} ajouté${importedCount > 1 ? 's' : ''} à l’EDT. Cliquez sur un créneau pour le corriger.`;
       notice('Le planning issu de la photo a été ajouté à l’EDT.');
-    } catch {
+    } catch (error) {
       progress.style.display = 'none';
-      photoState.textContent = 'La lecture automatique n’a pas pu démarrer. Vos plages restent disponibles en saisie manuelle.';
+      const expectedMessage = String(error?.message || '');
+      photoState.textContent = /(image|volumineuse|fichier)/i.test(expectedMessage)
+        ? expectedMessage
+        : 'La lecture automatique n’a pas pu démarrer. Vos plages restent disponibles en saisie manuelle.';
       notice('Import photo indisponible pour le moment.');
     } finally {
       await recognition?.worker?.terminate();
@@ -172,7 +187,7 @@
     const item = [...(event.clipboardData?.items || [])].find((candidate) => candidate.type.startsWith('image/'));
     const file = item?.getAsFile();
     if (!file) return;
-    importPhoto(file);
+    void importPhoto(file);
     notice('Capture collée : lecture du planning en cours.');
   });
 

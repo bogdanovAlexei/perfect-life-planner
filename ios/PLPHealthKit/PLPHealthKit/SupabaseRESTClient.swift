@@ -5,6 +5,7 @@ actor SupabaseRESTClient {
     private let keychain = KeychainStore()
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
+    private let session: URLSession
 
     private enum Key {
         static let session = "supabase-session"
@@ -18,6 +19,13 @@ actor SupabaseRESTClient {
 
     init(configuration: AppConfiguration) {
         self.configuration = configuration
+        let sessionConfiguration = URLSessionConfiguration.ephemeral
+        sessionConfiguration.timeoutIntervalForRequest = 30
+        sessionConfiguration.timeoutIntervalForResource = 60
+        sessionConfiguration.httpShouldSetCookies = false
+        sessionConfiguration.urlCache = nil
+        sessionConfiguration.requestCachePolicy = .reloadIgnoringLocalCacheData
+        self.session = URLSession(configuration: sessionConfiguration)
     }
 
     func hasSession() -> Bool {
@@ -74,7 +82,7 @@ actor SupabaseRESTClient {
         request.setValue(configuration.supabasePublishableKey, forHTTPHeaderField: "apikey")
         request.setValue("Bearer \(session.accessToken)", forHTTPHeaderField: "Authorization")
 
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         try validate(response, data: data)
     }
 
@@ -93,7 +101,7 @@ actor SupabaseRESTClient {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("resolution=merge-duplicates,return=minimal", forHTTPHeaderField: "Prefer")
 
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         try validate(response, data: data)
     }
 
@@ -159,13 +167,17 @@ actor SupabaseRESTClient {
         request.httpMethod = method
         request.httpBody = try encoder.encode(body)
         request.setValue(configuration.supabasePublishableKey, forHTTPHeaderField: "apikey")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         if let accessToken {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         }
 
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         try validate(response, data: data)
+        guard data.count <= 1_048_576 else {
+            throw SupabaseClientError.invalidResponse
+        }
         do {
             return try decoder.decode(T.self, from: data)
         } catch {
@@ -175,26 +187,32 @@ actor SupabaseRESTClient {
 
     private func validate(_ response: URLResponse, data: Data? = nil) throws {
         guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
-            if let data, let apiError = try? decoder.decode(SupabaseErrorResponse.self, from: data) {
-                throw SupabaseClientError.api(apiError.bestMessage)
-            }
             let code = (response as? HTTPURLResponse)?.statusCode ?? -1
-            throw SupabaseClientError.api("Supabase a renvoyé HTTP \(code).")
+            throw SupabaseClientError.apiStatus(code)
         }
     }
 }
 
 enum SupabaseClientError: LocalizedError {
     case notAuthenticated
-    case api(String)
+    case apiStatus(Int)
     case invalidResponse
 
     var errorDescription: String? {
         switch self {
         case .notAuthenticated:
             return "Connectez-vous pour synchroniser vos données."
-        case let .api(message):
-            return message
+        case let .apiStatus(status):
+            switch status {
+            case 400, 401:
+                return "Identifiants invalides ou session expirée."
+            case 403:
+                return "Cette opération n’est pas autorisée."
+            case 429:
+                return "Trop de tentatives. Réessayez dans quelques minutes."
+            default:
+                return "Le service de synchronisation est momentanément indisponible (HTTP \(status))."
+            }
         case .invalidResponse:
             return "Réponse Supabase invalide."
         }

@@ -6,20 +6,26 @@
     legacyHidden: 'plp-custom-hidden',
   };
   const listeners = new Set();
+  const allowedDays = new Set(['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']);
+  const allowedTypes = new Set(['Personnel', 'Travail', 'Énergie']);
+  const timePattern = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
+  const maximumEvents = 500;
 
   const createId = () => `evt-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const currentWeekKey = () => window.PLPWeek?.currentKey?.() || '';
 
   function normalizeEvent(event) {
     const flex = event.flex === 'fixed' ? 'fixed' : 'flexible';
+    const start = timePattern.test(event.start) ? event.start : '09:00';
+    const end = timePattern.test(event.end) && event.end > start ? event.end : '10:00';
     return {
       id: event.id || createId(),
-      name: String(event.name || 'Plage sans nom').trim(),
-      description: String(event.description || '').trim(),
-      day: event.day || 'Lundi',
-      start: event.start || '09:00',
-      end: event.end || '10:00',
-      type: event.type || 'Personnel',
+      name: String(event.name || 'Plage sans nom').trim().slice(0, 120),
+      description: String(event.description || '').trim().slice(0, 2000),
+      day: allowedDays.has(event.day) ? event.day : 'Lundi',
+      start,
+      end,
+      type: allowedTypes.has(event.type) ? event.type : 'Personnel',
       flex,
       weekKey: flex === 'fixed' ? null : (event.weekKey || currentWeekKey()),
       important: Boolean(event.important),
@@ -34,7 +40,7 @@
       const flexibleValue = localStorage.getItem(storageKeys.hideFlexible);
       const legacyHidden = localStorage.getItem(storageKeys.legacyHidden) === 'true';
       return {
-        events: Array.isArray(events) ? events.map(normalizeEvent) : [],
+        events: Array.isArray(events) ? events.slice(0, maximumEvents).map(normalizeEvent) : [],
         freshMode: freshValue === null ? true : freshValue === 'true',
         hideFlexible: flexibleValue === null ? legacyHidden : flexibleValue === 'true',
       };
@@ -112,6 +118,7 @@
       return () => listeners.delete(listener);
     },
     addEvent(event) {
+      if (state.events.length >= maximumEvents) throw new Error('EVENT_LIMIT_REACHED');
       const normalized = normalizeEvent(event);
       commit(() => state.events.push(normalized));
       return normalized;
@@ -136,7 +143,7 @@
       commit(() => { state.hideFlexible = Boolean(value); });
     },
     importEvents(events) {
-      const imported = events.map((event) => normalizeEvent({ ...event, flex: 'fixed', important: false, source: 'photo' }));
+      const imported = events.slice(0, maximumEvents).map((event) => normalizeEvent({ ...event, flex: 'fixed', important: false, source: 'photo' }));
       const unique = new Map();
       imported.forEach((event) => unique.set(eventKey(event), event));
       commit(() => {
