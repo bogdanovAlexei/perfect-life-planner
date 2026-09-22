@@ -11,7 +11,7 @@ const auth = source('dist/js/features/auth.js');
 const preview = source('plp-preview.mjs');
 const snapshotMigration = source('supabase/migrations/20260920193305_create_health_snapshots.sql');
 const dailyMigration = source('supabase/migrations/20260921193155_create_health_daily_summaries.sql');
-const hardeningMigration = source('supabase/migrations/20260922080000_harden_health_data_constraints.sql');
+const hardeningMigration = source('supabase/migrations/20260922075435_harden_health_data_constraints.sql');
 
 assert.match(html, /http-equiv="Content-Security-Policy"/);
 assert.match(html, /object-src 'none'/);
