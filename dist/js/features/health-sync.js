@@ -168,20 +168,20 @@ async function restoreLegacyHealthSnapshot(client, userId) {
   return summary;
 }
 
-async function syncHealthWithSession(session) {
+async function syncHealthWithSession(session, { saveCurrentImport = false } = {}) {
   if (!session?.user) {
     setHealthPrivacy('Données locales tant que vous n’êtes pas connecté.');
     return;
   }
 
   try {
-    const client = supabaseClient || (await loadSupabase());
+    const client = await window.PLPAuth?.getClient?.();
+    if (!client) throw new Error('SUPABASE_CLIENT_UNAVAILABLE');
     const userId = session.user.id;
 
-    await saveLegacyHealthSnapshot(client, healthSummary, userId);
-    if (!healthSummary) {
-      healthSummary = await restoreLegacyHealthSnapshot(client, userId);
-    }
+    if (saveCurrentImport) await saveLegacyHealthSnapshot(client, healthSummary, userId);
+    const storedSummary = await restoreLegacyHealthSnapshot(client, userId);
+    healthSummary = storedSummary;
 
     const appleSummary = appleHealthFromDb(await latestAppleHealth(client, userId));
     if (appleHealthIsNewerThan(appleSummary, healthSummary)) {

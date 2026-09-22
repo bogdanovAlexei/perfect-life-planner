@@ -14,7 +14,8 @@
   const createId = () => `evt-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const currentWeekKey = () => window.PLPWeek?.currentKey?.() || '';
 
-  function normalizeEvent(event) {
+  function normalizeEvent(event = {}) {
+    if (!event || typeof event !== 'object' || Array.isArray(event)) event = {};
     const flex = event.flex === 'fixed' ? 'fixed' : 'flexible';
     const start = timePattern.test(event.start) ? event.start : '09:00';
     const end = timePattern.test(event.end) && event.end > start ? event.end : '10:00';
@@ -53,6 +54,10 @@
 
   function persist() {
     try {
+      if (window.PLPAuth?.session?.user) {
+        Object.values(storageKeys).forEach((key) => localStorage.removeItem(key));
+        return;
+      }
       localStorage.setItem(storageKeys.events, JSON.stringify(state.events));
       localStorage.setItem(storageKeys.freshMode, String(state.freshMode));
       localStorage.setItem(storageKeys.hideFlexible, String(state.hideFlexible));
@@ -110,6 +115,11 @@
   const api = {
     createId,
     getState: () => ({ ...state, events: state.events.map((event) => ({ ...event })) }),
+    getScheduleSnapshot: () => ({
+      events: state.events.map((event) => ({ ...event })),
+      freshMode: state.freshMode,
+      hideFlexible: state.hideFlexible,
+    }),
     eventsForWeek,
     visibleEvents,
     protectedMinutes,
@@ -135,6 +145,17 @@
     },
     clearEvents() {
       commit(() => { state.events = []; state.hideFlexible = false; });
+    },
+    replaceSchedule(schedule = {}) {
+      const events = Array.isArray(schedule.events)
+        ? schedule.events.slice(0, maximumEvents).map(normalizeEvent)
+        : [];
+      commit(() => {
+        state.events = events;
+        state.freshMode = schedule.freshMode !== false;
+        state.hideFlexible = Boolean(schedule.hideFlexible);
+      });
+      return api.getScheduleSnapshot();
     },
     setFreshMode(value) {
       commit(() => { state.freshMode = Boolean(value); });

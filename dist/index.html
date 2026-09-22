@@ -12,8 +12,9 @@
         <link rel="stylesheet" href="css/app.css" />
         <link rel="stylesheet" href="css/week-navigation.css" />
         <link rel="stylesheet" href="css/planner-calendar.css" />
+        <link rel="stylesheet" href="css/account.css" />
   </head>
-  <body>
+  <body class="account-loading">
     <div class="app">
       <aside class="sidebar">
         <div class="brand"><span class="brand-mark">P</span> Perfect Life Planner <span style="font-size:.68rem;color:#8792ad;letter-spacing:.06em">PLP</span></div>
@@ -31,9 +32,35 @@
         <div class="sidebar-footer"><span class="avatar">P</span><span>Votre espace PLP<br><small style="color:#8792ad">Planning personnel</small></span></div>
       </aside>
       <main class="content">
+        <section class="personal-space card" id="personalAccount" aria-labelledby="personalAccountTitle">
+          <div class="personal-space-heading">
+            <div><p class="eyebrow">Votre espace privé</p><h2 id="personalAccountTitle">Mon espace personnel</h2><p id="accountIntro">Connectez-vous pour retrouver votre emploi du temps et vos informations sur vos appareils.</p></div>
+            <span class="account-status-badge" id="accountBadge" role="status">Hors connexion</span>
+          </div>
+          <div class="account-panel" id="signedOutPanel">
+            <form class="account-auth-form" id="accountAuthForm" novalidate>
+              <label>Email<input id="accountEmail" name="email" type="email" maxlength="254" autocomplete="email" inputmode="email" placeholder="vous@exemple.fr" required /></label>
+              <label>Mot de passe<input id="accountPassword" name="password" type="password" minlength="8" maxlength="128" autocomplete="current-password" placeholder="8 caractères minimum" required /></label>
+              <div class="account-auth-actions"><button class="primary" id="accountSubmit" type="submit">Se connecter</button><button class="auth-toggle" id="accountModeToggle" type="button">Créer un compte</button></div>
+            </form>
+          </div>
+          <div class="account-panel" id="signedInPanel" hidden>
+            <div class="account-profile">
+              <div class="account-avatar" aria-hidden="true" id="accountAvatar">P</div>
+              <div class="account-profile-data"><p class="metric-title">Adresse de connexion</p><p class="account-email" id="profileEmail">—</p><p class="account-detail" id="profileCreated">Compte personnel</p></div>
+              <button class="secondary account-signout" id="accountSignOut" type="button">Se déconnecter</button>
+            </div>
+            <div class="account-settings">
+              <details class="account-setting"><summary>Modifier mon adresse email</summary><form id="changeEmailForm" class="account-edit-form" novalidate><label>Nouvelle adresse email<input id="newAccountEmail" type="email" maxlength="254" autocomplete="email" required /></label><button class="secondary" type="submit">Mettre à jour l’email</button></form></details>
+              <details class="account-setting"><summary>Modifier mon mot de passe</summary><form id="changePasswordForm" class="account-edit-form" novalidate><label>Mot de passe actuel<input id="currentAccountPassword" type="password" maxlength="128" autocomplete="current-password" required /></label><label>Nouveau mot de passe<input id="newAccountPassword" type="password" minlength="8" maxlength="128" autocomplete="new-password" required /></label><label>Confirmer le nouveau mot de passe<input id="confirmAccountPassword" type="password" minlength="8" maxlength="128" autocomplete="new-password" required /></label><button class="secondary" type="submit">Changer le mot de passe</button></form></details>
+            </div>
+          </div>
+          <div class="schedule-transfer" id="scheduleTransfer" hidden><p id="transferMessage">Un planning enregistré sur cet appareil est disponible.</p><div><button class="secondary" id="importLocalSchedule" type="button">Importer dans ce compte</button><button class="secondary" id="discardLocalSchedule" type="button">Ne pas importer</button></div></div>
+          <p class="account-message" id="accountMessage" role="status" aria-live="polite">Les plannings sont privés à chaque compte.</p>
+        </section>
         <header class="topbar">
           <div><p class="eyebrow">Semaine en cours</p><h1>Construisons votre semaine</h1></div>
-          <div class="topbar-actions"><button class="secondary account-button" id="accountButton">Se connecter</button><button class="primary" id="optimize">Optimiser ma semaine</button></div>
+          <div class="topbar-actions"><button class="primary" id="optimize">Optimiser ma semaine</button></div>
         </header>
         <section class="health-panel" aria-label="Santé Garmin">
           <div class="card health-toolbar">
@@ -71,7 +98,7 @@
           </aside>
         </section>
       </main>
-    </div><dialog id="eventDialog" class="auth-dialog"><form class="auth-card event-editor-card" method="dialog" onsubmit="return false"><div class="auth-head"><div><p class="eyebrow">Plage du planning</p><h2>Modifier la plage</h2></div><button class="icon-button" id="closeEvent" type="button" aria-label="Fermer">×</button></div><p id="editEventWhen" class="event-editor-meta"></p><label>Nom<input id="editEventName" type="text" maxlength="120" /></label><label>Description<textarea id="editEventDescription" maxlength="2000" placeholder="Ajouter une note, un lieu ou une consigne…"></textarea></label><label class="important-field"><input id="editImportant" type="checkbox" /> Important <small>Compte dans les créneaux protégés.</small></label><button class="tag-button" id="editFlexToggle" type="button">Plage flexible</button><div class="event-editor-actions"><button class="danger-button" id="deleteEdited" type="button">Supprimer</button><button class="primary" id="saveEdited" type="button">Enregistrer</button></div></form></dialog><dialog id="authDialog" class="auth-dialog"><form class="auth-card" method="dialog" onsubmit="return false"><div class="auth-head"><div><p class="eyebrow">Votre espace PLP</p><h2 id="authTitle">Se connecter</h2></div><button class="icon-button" id="closeAuth" type="button" aria-label="Fermer">×</button></div><p id="authCopy" class="metric-note">Retrouvez votre planning sur tous vos appareils.</p><label>Email<input id="authEmail" type="email" maxlength="254" autocomplete="email" inputmode="email" placeholder="vous@exemple.fr" /></label><label>Mot de passe<input id="authPassword" type="password" minlength="8" maxlength="128" autocomplete="current-password" placeholder="8 caractères minimum" /></label><button class="primary" id="authSubmit" type="button">Se connecter</button><button class="auth-toggle" id="authToggle" type="button">Créer un compte</button><small id="authState" class="auth-state">Connexion sécurisée via Supabase.</small></form></dialog><div class="toast" role="status" id="toast">Votre planning a été mis à jour.</div>
+    </div><dialog id="eventDialog" class="auth-dialog"><form class="auth-card event-editor-card" method="dialog" onsubmit="return false"><div class="auth-head"><div><p class="eyebrow">Plage du planning</p><h2>Modifier la plage</h2></div><button class="icon-button" id="closeEvent" type="button" aria-label="Fermer">×</button></div><p id="editEventWhen" class="event-editor-meta"></p><label>Nom<input id="editEventName" type="text" maxlength="120" /></label><label>Description<textarea id="editEventDescription" maxlength="2000" placeholder="Ajouter une note, un lieu ou une consigne…"></textarea></label><label class="important-field"><input id="editImportant" type="checkbox" /> Important <small>Compte dans les créneaux protégés.</small></label><button class="tag-button" id="editFlexToggle" type="button">Plage flexible</button><div class="event-editor-actions"><button class="danger-button" id="deleteEdited" type="button">Supprimer</button><button class="primary" id="saveEdited" type="button">Enregistrer</button></div></form></dialog><div class="toast" role="status" id="toast">Votre planning a été mis à jour.</div>
     <script src="js/config.js" defer></script>
     <script src="js/security.js" defer></script>
     <script src="js/features/week-navigation.js" defer></script>
@@ -83,6 +110,6 @@
     <script src="js/features/garmin-parsers.js" defer></script>
     <script src="js/features/health-sync.js" defer></script>
     <script src="js/features/health.js" defer></script>
-    <script src="js/features/auth.js" defer></script>
+    <script src="js/features/account.js" defer></script>
   </body>
 </html>

@@ -32,7 +32,7 @@
       paintHealth(summary);
       saveHealthLocal(summary);
       healthStatus.textContent = `${summary.sourceFileName} importé${summary.observedOn ? ` · données du ${summary.observedOn}` : ''}.`;
-      await syncHealthWithSession(authSession);
+      await syncHealthWithSession(window.PLPAuth?.session || null, { saveCurrentImport: true });
       notice('Les cartes santé ont été mises à jour.');
     } catch (error) {
       healthStatus.textContent = safeImportMessage(error);
@@ -72,16 +72,18 @@
     saveHealthLocal(null);
     healthStatus.textContent = 'Données santé effacées sur cet appareil.';
 
-    if (authSession?.user && supabaseClient) {
-      const userId = authSession.user.id;
+    const session = window.PLPAuth?.session || null;
+    const client = window.PLPAuth?.client || null;
+    if (session?.user && client) {
+      const userId = session.user.id;
       const results = await Promise.all([
-        supabaseClient.from('health_snapshots').delete().eq('user_id', userId),
-        supabaseClient.from('health_daily_summaries').delete().eq('user_id', userId),
+        client.from('health_snapshots').delete().eq('user_id', userId),
+        client.from('health_daily_summaries').delete().eq('user_id', userId),
       ]);
       if (results.some((result) => result.error)) healthStatus.textContent = 'Effacé localement, mais la suppression Supabase a échoué.';
     }
 
-    document.getElementById('healthPrivacy').textContent = authSession?.user
+    document.getElementById('healthPrivacy').textContent = session?.user
       ? 'Connecté · aucune donnée santé enregistrée.'
       : 'Données locales tant que vous n’êtes pas connecté.';
     notice('Les données santé ont été retirées.');

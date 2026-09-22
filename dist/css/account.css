@@ -1,0 +1,62 @@
+body.account-loading .health-panel,
+body.account-loading .workspace { visibility: hidden; }
+
+.personal-space {
+  margin: 0 0 22px;
+  padding: 18px 20px;
+  border-color: #dce4f2;
+  background: linear-gradient(115deg, #fff 0%, #f5f8ff 100%);
+  box-shadow: 0 8px 24px #1424460a;
+}
+.personal-space-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; }
+.personal-space-heading h2 { margin:0; font-size:1.18rem; letter-spacing:-.035em; }
+.personal-space-heading .eyebrow { margin-bottom:4px; }
+.personal-space-heading > div > p:last-child { margin:5px 0 0; color:var(--muted); font-size:.77rem; line-height:1.4; }
+.account-status-badge { flex:none; padding:6px 10px; border-radius:999px; background:#eef1f7; color:#53617a; font-size:.68rem; font-weight:750; }
+.account-status-badge[data-state="connected"] { background:#e5f7ec; color:#23613d; }
+.account-status-badge[data-state="pending"] { background:#fff3d9; color:#805f16; }
+.account-panel { margin-top:14px; }
+.account-auth-form { display:grid; grid-template-columns:minmax(180px,1fr) minmax(180px,1fr) auto; align-items:end; gap:10px; }
+.account-auth-form label,.account-edit-form label { display:grid; gap:6px; color:#58657f; font-size:.73rem; font-weight:750; }
+.account-auth-form input,.account-edit-form input { width:100%; min-width:0; border:1px solid #d6deec; border-radius:10px; background:#fff; padding:10px 11px; color:var(--ink); }
+.account-auth-actions { display:flex; align-items:center; gap:12px; }
+.account-auth-actions .primary { white-space:nowrap; padding:11px 14px; }
+.account-auth-actions .auth-toggle { white-space:nowrap; }
+.account-profile { display:flex; align-items:center; gap:12px; padding:12px; border:1px solid #e4e9f2; background:#fff; border-radius:13px; }
+.account-avatar { display:grid; place-items:center; width:42px; height:42px; flex:none; border-radius:13px; background:linear-gradient(140deg,#c8f4d7,#ded3ff); color:#101a31; font-weight:850; font-size:1rem; }
+.account-profile-data { min-width:0; flex:1; }
+.account-profile-data .metric-title { margin-bottom:3px; }
+.account-email { margin:0; overflow-wrap:anywhere; font-size:.88rem; font-weight:800; }
+.account-detail { margin:4px 0 0; color:var(--muted); font-size:.68rem; }
+.account-signout { width:auto; flex:none; }
+.account-settings { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:10px; }
+.account-setting { min-width:0; border:1px solid #e4e9f2; background:#fff; border-radius:11px; }
+.account-setting summary { padding:11px 12px; color:#294779; font-size:.73rem; font-weight:750; cursor:pointer; }
+.account-setting[open] summary { border-bottom:1px solid #edf0f5; }
+.account-edit-form { display:grid; gap:9px; padding:12px; }
+.account-edit-form .secondary { width:auto; justify-self:start; }
+.schedule-transfer { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:11px 12px; margin-top:12px; border:1px solid #edd797; border-radius:11px; background:#fff9e8; }
+.schedule-transfer[hidden] { display:none; }
+.schedule-transfer p { margin:0; color:#715a20; font-size:.72rem; line-height:1.4; }
+.schedule-transfer > div { display:flex; gap:7px; flex:none; }
+.schedule-transfer .secondary { width:auto; white-space:nowrap; }
+.account-message { min-height:1em; margin:10px 2px 0; color:#66738c; font-size:.69rem; line-height:1.4; }
+.account-message[data-kind="error"] { color:#a4473d; }
+.account-message[data-kind="success"] { color:#28704a; }
+
+@media (max-width:900px) {
+  .account-auth-form { grid-template-columns:1fr 1fr; }
+  .account-auth-actions { grid-column:1 / -1; }
+}
+@media (max-width:600px) {
+  .personal-space { padding:15px; margin-bottom:17px; border-radius:16px; }
+  .personal-space-heading { flex-direction:column; gap:10px; }
+  .account-auth-form,.account-settings { grid-template-columns:1fr; }
+  .account-auth-actions { display:grid; grid-template-columns:1fr; }
+  .account-auth-actions .primary { width:100%; min-height:44px; }
+  .account-profile { flex-wrap:wrap; }
+  .account-signout { width:100%; }
+  .schedule-transfer { align-items:stretch; flex-direction:column; }
+  .schedule-transfer > div { display:grid; grid-template-columns:1fr 1fr; }
+  .schedule-transfer .secondary { width:100%; white-space:normal; }
+}
